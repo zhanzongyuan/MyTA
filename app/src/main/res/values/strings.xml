@@ -2,15 +2,25 @@
     <string name="app_name">My TA</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
+    <string name="prompt_email">邮箱</string>
+    <string name="prompt_password">密码</string>
+    <string name="text_login">登录帐号</string>
+    <string name="action_login">登录</string>
+    <string name="action_forget">忘记密码</string>
+    <string name="action_sign_in">注册新用户</string>
+    <string name="error_invalid_email">请输入正确的邮箱</string>
+    <string name="error_invalid_password">密码格式不正确</string>
+    <string name="error_incorrect_password">密码错误</string>
+    <string name="error_field_required">必填</string>
+
+    <!-- Strings related to register -->
+    <string name="text_register">新用户注册</string>
+    <string name="prompt_confirm_password">再次输入密码</string>
+    <string name="action_register">注册</string>
+    <string name="action_clear">清除</string>
+    <string name="radio_student">学生</string>
+    <string name="radio_teacher">老师/TA</string>
+    <string name="text_valid_email">请输入您的常用邮箱</string>
+    <string name="text_valid_password">密码至少为8位，必须是字母和数字的组合</string>
+    <string name="text_register_type">你是</string>
 </resources>
