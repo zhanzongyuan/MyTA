@@ -12,6 +12,9 @@ import four.awesome.myta.fragments.CourseFragment;
 import four.awesome.myta.fragments.HomeworkFragment;
 import four.awesome.myta.fragments.UserFragment;
 
+/**
+ * Main activity for navigation between three fragment.
+ */
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -19,14 +22,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        initialNavigationView();
+    }
 
+    /**
+     * Initial navigation item click event.
+     */
+    private void initialNavigationView() {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Fragment selectFragment = null;
+                // Navigation to differnt fragment by clicking different navigation item.
                 switch (item.getItemId()) {
                     case R.id.icon_course:
                         selectFragment = CourseFragment.newInstance();
@@ -38,12 +46,14 @@ public class MainActivity extends AppCompatActivity {
                         selectFragment = UserFragment.newInstance();
                         break;
                 }
+                // Change fragment.
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame_layout, selectFragment);
                 transaction.commit();
                 return true;
             }
         });
+        // Initial first fragment.
         Fragment selectFragment = UserFragment.newInstance();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_layout, selectFragment);

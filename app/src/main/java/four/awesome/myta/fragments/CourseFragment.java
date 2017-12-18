@@ -22,6 +22,8 @@ public class CourseFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // TODO: Complete page logic here.
     }
 
     @Override
@@ -29,4 +31,6 @@ public class CourseFragment extends Fragment {
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_course, container, false);
     }
+
+    // TODO: Complete related function here.
 }
