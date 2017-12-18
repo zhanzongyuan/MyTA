@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/icon_course"
+        android:icon="@android:drawable/btn_minus"
+        android:title="@string/course"/>
+    <item
+        android:id="@+id/icon_homework"
+        android:icon="@android:drawable/star_on"
+        android:title="@string/homework"/>
+    <item
+        android:id="@+id/icon_user_info"
+        android:icon="@android:drawable/star_big_off"
+        android:title="@string/user_info"/>
+</menu>
