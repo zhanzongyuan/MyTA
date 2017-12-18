@@ -19,10 +19,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
 public class LoginActivity extends AppCompatActivity
         implements View.OnClickListener,
         Observer<User> {
-
     private EditText editLoginEmail;
     private EditText editLoginPassword;
     private Button buttonForget;
@@ -78,7 +78,10 @@ public class LoginActivity extends AppCompatActivity
     }
     @Override
     public void onComplete() {
-
+        // Log in successfully, jump to main activity.
+        Toast.makeText(this, "Log in successfully", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivityForResult(intent, 0);
     }
 
     /**

@@ -8,8 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import four.awesome.myta.fragments.AssignmentFragment;
 import four.awesome.myta.fragments.CourseFragment;
-import four.awesome.myta.fragments.HomeworkFragment;
 import four.awesome.myta.fragments.UserFragment;
 
 /**
@@ -39,8 +39,8 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.icon_course:
                         selectFragment = CourseFragment.newInstance();
                         break;
-                    case R.id.icon_homework:
-                        selectFragment = HomeworkFragment.newInstance();
+                    case R.id.icon_assignment:
+                        selectFragment = AssignmentFragment.newInstance();
                         break;
                     case R.id.icon_user_info:
                         selectFragment = UserFragment.newInstance();

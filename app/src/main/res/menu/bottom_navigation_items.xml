@@ -2,14 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/icon_course"
-        android:icon="@android:drawable/btn_minus"
+        android:icon="@drawable/ic_class_black_24dp"
         android:title="@string/course"/>
     <item
-        android:id="@+id/icon_homework"
-        android:icon="@android:drawable/star_on"
+        android:id="@+id/icon_assignment"
+        android:icon="@drawable/ic_assignment_black_24dp"
         android:title="@string/homework"/>
     <item
         android:id="@+id/icon_user_info"
-        android:icon="@android:drawable/star_big_off"
+        android:icon="@drawable/ic_account_circle_black_24dp"
         android:title="@string/user_info"/>
 </menu>
