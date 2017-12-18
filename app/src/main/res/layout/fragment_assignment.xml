@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="four.awesome.myta.fragments.HomeworkFragment">
+    tools:context="four.awesome.myta.fragments.AssignmentFragment">
 
     <!-- TODO: Update homework fragment layout -->
     <TextView
