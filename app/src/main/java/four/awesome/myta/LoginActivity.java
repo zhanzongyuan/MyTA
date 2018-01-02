@@ -1,23 +1,20 @@
 package four.awesome.myta;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+
 import four.awesome.myta.models.User;
-import four.awesome.myta.services.APIAccessService;
+import four.awesome.myta.services.APIClient;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 public class LoginActivity extends AppCompatActivity
@@ -53,7 +50,7 @@ public class LoginActivity extends AppCompatActivity
             case R.id.button_login_submit:
                 String username = editLoginEmail.getText().toString();
                 String password = editLoginPassword.getText().toString();
-                (new APIAccessService()).subcribeAuthorize(this, username, password);
+                (new APIClient()).subscribeAuthorize(this, username, password);
                 break;
             case R.id.button_login_register:
                 startActivity(new Intent(this, RegisterActivity.class));
@@ -66,11 +63,11 @@ public class LoginActivity extends AppCompatActivity
      */
     @Override
     public void onSubscribe(Disposable d) {
-
+        Toast.makeText(this, "Logging", Toast.LENGTH_SHORT).show();
     }
     @Override
     public void onNext(User user) {
-        Toast.makeText(this, user.getToken(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, user.getApiKey(), Toast.LENGTH_SHORT).show();
     }
     @Override
     public void onError(Throwable e) {
@@ -93,5 +90,19 @@ public class LoginActivity extends AppCompatActivity
         buttonForget = (Button) findViewById(R.id.button_login_forget);
         buttonLogin = (Button) findViewById(R.id.button_login_submit);
         buttonRegister = (Button) findViewById(R.id.button_login_register);
+    }
+
+    static public String md5Hash(String data) {
+        String result = "";
+        try {
+            byte[] strBytes = data.getBytes("UTF-8");
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] md5Bytes = md.digest(strBytes);
+            BigInteger bigInt = new BigInteger(1, md5Bytes);
+            result = bigInt.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }
