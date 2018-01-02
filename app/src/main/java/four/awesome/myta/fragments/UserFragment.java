@@ -61,7 +61,7 @@ public class UserFragment extends Fragment {
         user_email = (TextView) user_view.findViewById(R.id.user_email);
         user_phone = (TextView) user_view.findViewById(R.id.user_phone);
         
-        user_img.setImageResource(R.mipmap.lenna);
+        user_img.setImageResource(R.mipmap.lenna_round);
         // TODO: 18-1-2 User类没有头像信息，请补充
         user_name.setText(user_data.getUsername());
         user_id.setText(("15xxxxxx"));
@@ -72,7 +72,10 @@ public class UserFragment extends Fragment {
     }
     //设置界面控件对象的有关属性
     private void setUserData() {
-        user_data = null;
-        // TODO: 18-1-2 不知user数据在哪，请在这里设置 
+        if (user_data == null) {
+            user_data = new User("张涵玮", "123", "student", "123@qq.com");
+            // TODO: 18-1-2 不知user数据在哪，请在这里设置
+        }
+
     }
 }
