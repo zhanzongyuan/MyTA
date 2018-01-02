@@ -17,7 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/text_register_valid_username"
+        app:layout_constraintBottom_toTopOf="@+id/text_register_valid_username"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginBottom="20dp" />
@@ -28,8 +28,8 @@
         android:textColor="@android:color/white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/text_register"
-        app:layout_constraintBottom_toTopOf="@id/edit_register_username"
+        app:layout_constraintTop_toBottomOf="@+id/text_register"
+        app:layout_constraintBottom_toTopOf="@+id/edit_register_username"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginBottom="10dp"/>
 
@@ -43,8 +43,8 @@
         android:textSize="14sp"
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        app:layout_constraintTop_toBottomOf="@id/text_register_valid_username"
-        app:layout_constraintBottom_toTopOf="@id/text_register_valid_email"
+        app:layout_constraintTop_toBottomOf="@+id/text_register_valid_username"
+        app:layout_constraintBottom_toTopOf="@+id/text_register_valid_email"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginBottom="20dp"/>
@@ -55,8 +55,8 @@
         android:textColor="@android:color/white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/edit_register_username"
-        app:layout_constraintBottom_toTopOf="@id/edit_register_email"
+        app:layout_constraintTop_toBottomOf="@+id/edit_register_username"
+        app:layout_constraintBottom_toTopOf="@+id/edit_register_email"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginBottom="10dp"/>
 
@@ -70,8 +70,8 @@
         android:textSize="14sp"
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        app:layout_constraintTop_toBottomOf="@id/text_register_valid_email"
-        app:layout_constraintBottom_toTopOf="@id/text_register_valid_password"
+        app:layout_constraintTop_toBottomOf="@+id/text_register_valid_email"
+        app:layout_constraintBottom_toTopOf="@+id/text_register_valid_password"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginBottom="20dp" />
@@ -82,8 +82,8 @@
         android:textColor="@android:color/white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/edit_register_email"
-        app:layout_constraintBottom_toTopOf="@id/edit_register_password"
+        app:layout_constraintTop_toBottomOf="@+id/edit_register_email"
+        app:layout_constraintBottom_toTopOf="@+id/edit_register_password"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginBottom="10dp"/>
 
@@ -98,8 +98,8 @@
         android:textSize="14sp"
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        app:layout_constraintTop_toBottomOf="@id/text_register_valid_password"
-        app:layout_constraintBottom_toTopOf="@id/edit_register_confirm_password"
+        app:layout_constraintTop_toBottomOf="@+id/text_register_valid_password"
+        app:layout_constraintBottom_toTopOf="@+id/edit_register_confirm_password"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginBottom="10dp"/>
@@ -115,8 +115,8 @@
         android:textSize="14sp"
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        app:layout_constraintTop_toBottomOf="@id/edit_register_password"
-        app:layout_constraintBottom_toTopOf="@id/text_register_type"
+        app:layout_constraintTop_toBottomOf="@+id/edit_register_password"
+        app:layout_constraintBottom_toTopOf="@+id/text_register_type"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginBottom="20dp" />
@@ -127,8 +127,8 @@
         android:textColor="@android:color/white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/edit_register_confirm_password"
-        app:layout_constraintBottom_toTopOf="@id/radio_group_register_type"
+        app:layout_constraintTop_toBottomOf="@+id/edit_register_confirm_password"
+        app:layout_constraintBottom_toTopOf="@+id/radio_group_register_type"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginBottom="10dp" />
 
@@ -137,8 +137,8 @@
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/text_register_type"
-        app:layout_constraintBottom_toTopOf="@id/button_register_submit"
+        app:layout_constraintTop_toBottomOf="@+id/text_register_type"
+        app:layout_constraintBottom_toTopOf="@+id/button_register_submit"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" >
 
@@ -166,7 +166,7 @@
         android:text="@string/action_register"
         android:layout_width="200dp"
         android:layout_height="40dp"
-        app:layout_constraintTop_toBottomOf="@id/radio_group_register_type"
+        app:layout_constraintTop_toBottomOf="@+id/radio_group_register_type"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="40dp" />
