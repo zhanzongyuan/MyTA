@@ -16,7 +16,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -43,6 +45,24 @@ public class APIClient {
                                             @Field("email") String email,
                                             @Field("type") String type);
 
+        @FormUrlEncoded
+        @PATCH("users/{ID}/courses")
+        Observable<Response<User>> appendCourse(@Field("course") int courseID,
+                                                @Path("ID") int userID,
+                                                @Query("api_key") String apiKey);
+
+        @FormUrlEncoded
+        @POST("courses")
+        Observable<Response<Course>> createCourse(@Query("api_key") String apiKey,
+                                                  @Field("course_name") String courseName,
+                                                  @Field("teacher_id") int teacherID);
+
+        @GET("courses")
+        Observable<Response<List<Course>>> listAllCourses(@Query("api_key") String apiKey);
+
+        @GET("courses")
+        Observable<Response<List<Course>>> listCoursesByUserID(@Query("api_key") String apiKey,
+                                                               @Query("user_id") int userID);
     }
 
     public APIClient() {
