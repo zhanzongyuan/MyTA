@@ -41,6 +41,7 @@ public class APIClient {
         Observable<Response<User>> register(@Field("username") String username,
                                             @Field("password") String password,
                                             @Field("name") String name,
+                                            @Field("campus_id") String campusID,
                                             @Field("phone") String phone,
                                             @Field("email") String email,
                                             @Field("type") String type);
@@ -95,9 +96,9 @@ public class APIClient {
     }
 
     public void subscribeRegister(Observer<Response<User>> observer, String username,
-                                  String password, String name, String phone, String email,
-                                  String type) {
-        service.register(username, password, name, phone, email, type)
+                                  String password, String name, String campusID,
+                                  String phone, String email, String type) {
+        service.register(username, password, name, campusID, phone, email, type)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
