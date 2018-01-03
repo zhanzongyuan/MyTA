@@ -5,10 +5,10 @@
     tools:context="four.awesome.myta.fragments.CourseFragment">
 
     <!-- TODO: Update course fragment layout -->
-    <TextView
+    <ExpandableListView
+        android:id="@+id/expandableListView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/course"
-        android:textSize="50sp" />
+        android:layout_height="wrap_content">
+    </ExpandableListView>
 
 </FrameLayout>
