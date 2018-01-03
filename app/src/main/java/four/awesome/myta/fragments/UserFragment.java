@@ -31,8 +31,9 @@ public class UserFragment extends Fragment {
     //用户界面布局对象
 
     public static UserFragment newInstance() {
-        if (fragment == null)
+        if (fragment == null) {
             fragment = new UserFragment();
+        }
         return fragment;
     }
 
@@ -45,7 +46,6 @@ public class UserFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         user_view = inflater.inflate(R.layout.fragment_user, container, false);
-        setUserData();
         setView();
         return user_view;
     }
@@ -54,29 +54,31 @@ public class UserFragment extends Fragment {
         if (user_view == null) {
             System.out.println("user fragment error!");
         }
+
         user_img = (CircleImageView) user_view.findViewById(R.id.user_image);
         user_name = (TextView) user_view.findViewById(R.id.user_name);
         user_id = (TextView) user_view.findViewById(R.id.user_id);
         user_email = (TextView) user_view.findViewById(R.id.user_email);
         user_phone = (TextView) user_view.findViewById(R.id.user_phone);
-        
+
+        if (user_data == null) {
+            user_data = new User("None", "None", "None", "None", "None", "None");
+        }
+
         user_img.setImageResource(R.mipmap.lenna_round);
-        // TODO: 18-1-2 User类没有头像信息，请补充
+        // TODO: 18-1-3 User信息中没有头像
         user_name.setText(user_data.getUsername());
-        user_id.setText(("15xxxxxx"));
-        // TODO: 18-1-2 User类没有学号信息，请补充
+        user_id.setText("没有学号信息");
+        // TODO: 18-1-3 User没有学号信息 
         user_email.setText(user_data.getEmail());
-        user_phone.setText("110");
-        // TODO: 18-1-2 User类没有电话信息，请补充
+        user_phone.setText(user_data.getPhone());
     }
     //设置界面控件对象的有关属性
-    private void setUserData() {
-        if (user_data == null) {
-            user_data = new User(
-                    "张涵玮",
-                    "", "张涵玮", "17665310114","student", "123@qq.com");
-            // TODO: 18-1-2 不知user数据在哪，请在这里设置
-        }
+    public void setUserData(User user) {
+        user_data = user;
+    }
+
+    private void changeUserData() {
 
     }
 }

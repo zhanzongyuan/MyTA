@@ -19,6 +19,7 @@
     <string name="prompt_username">用户名</string>
     <string name="prompt_confirm_password">再次输入密码</string>
     <string name="prompt_name">姓名</string>
+    <string name="prompt_campus_id">学号</string>
     <string name="prompt_phone">手机号码</string>
     <string name="action_register">注册</string>
     <string name="action_clear">清除</string>

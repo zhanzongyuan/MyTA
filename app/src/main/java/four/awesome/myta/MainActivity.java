@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private AssignmentFragment fragmentAssignment;
     private CourseFragment fragmentCourse;
     private UserFragment fragmentUser;
-    private User user;
 
     private BottomNavigationView bottomNavigationView;
     private ViewPager viewPager;
@@ -55,12 +54,13 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
 
         Intent intent = getIntent();
-        user = (User) intent.getSerializableExtra("user");
+        User user = (User) intent.getSerializableExtra("user");
 
         // TODO: Put data to three different fragments.
         fragmentAssignment = AssignmentFragment.newInstance();
         fragmentCourse = CourseFragment.newInstance("");
         fragmentUser = UserFragment.newInstance();
+        fragmentUser.setUserData(user);
     }
     /**
      * Initial navigation item click event.
