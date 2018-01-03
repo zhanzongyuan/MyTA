@@ -31,8 +31,7 @@ public class RecyclerAdapter extends SecondaryListAdapter<RecyclerAdapter.GroupI
     public void addData(DataTree<Date, Assignment> dataTree) {
         for (int i = 0; i < dts.size(); i++) {
             if (dts.get(i).getGroupItem().getYear() == dataTree.getGroupItem().getYear() &&
-                    dts.get(i).getGroupItem().getMonth() == dataTree.getGroupItem().getMonth() &&
-                    dts.get(i).getGroupItem().getDay() == dataTree.getGroupItem().getDay()) {
+                    dts.get(i).getGroupItem().getMonth() == dataTree.getGroupItem().getMonth()) {
                 for (int j = 0; j < dataTree.getSubItems().size(); j++)
                     dts.get(i).addNew(dataTree.getSubItems().get(j));
                 notifyNewData(dts);
@@ -65,9 +64,8 @@ public class RecyclerAdapter extends SecondaryListAdapter<RecyclerAdapter.GroupI
     @Override
     public void onSubItemBindViewHolder(RecyclerView.ViewHolder holder, int groupItemIndex, int subItemIndex) {
         ((SubItemViewHolder) holder).assignName.setText(dts.get(groupItemIndex).getSubItems().get(subItemIndex).getName());
-        ((SubItemViewHolder) holder).startTime.setText(formatter.format(dts.get(groupItemIndex).getSubItems().get(subItemIndex).getPublishTime()));
+        ((SubItemViewHolder) holder).startTime.setText(formatter.format(dts.get(groupItemIndex).getSubItems().get(subItemIndex).getStartTime()));
         ((SubItemViewHolder) holder).endTime.setText(formatter.format(dts.get(groupItemIndex).getSubItems().get(subItemIndex).getEndTime()));
-        ((SubItemViewHolder) holder).detail.setText(dts.get(groupItemIndex).getSubItems().get(subItemIndex).getDetail());
     }
 
     @Override
@@ -107,7 +105,6 @@ public class RecyclerAdapter extends SecondaryListAdapter<RecyclerAdapter.GroupI
             assignName = (TextView) itemView.findViewById(R.id.assignName);
             startTime = (TextView) itemView.findViewById(R.id.startTime);
             endTime = (TextView) itemView.findViewById(R.id.endTime);
-            detail = (TextView) itemView.findViewById(R.id.detail);
         }
     }
 }
