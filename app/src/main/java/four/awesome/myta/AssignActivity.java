@@ -25,7 +25,7 @@ public class AssignActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assign);
-        assignment = (Assignment) this.getIntent().getSerializableExtra("assign");
+        Bundle bundle = this.getIntent().getExtras();
         setView();
         //Log.d("assignActivity", assignment.getName());
     }

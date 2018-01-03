@@ -1,6 +1,7 @@
 package four.awesome.myta.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,7 +77,11 @@ public class RecyclerAdapter extends SecondaryListAdapter<RecyclerAdapter.GroupI
     @Override
     public void onSubItemClick(SubItemViewHolder holder, int groupItemIndex, int subItemIndex) {
         Assignment assignment = dts.get(groupItemIndex).getSubItems().get(subItemIndex);
-        EventBus.getDefault().post(assignment);
+        Bundle bundle = new Bundle();
+        bundle.putInt("groupItemIndex", groupItemIndex);
+        bundle.putInt("subItemIndex", subItemIndex);
+        bundle.putSerializable("assignment", assignment);
+        EventBus.getDefault().post(bundle);
     }
     @Override
     public void onGroupItemLongClick(Boolean isExpand, GroupItemViewHolder holder, int groupItemIndex) {

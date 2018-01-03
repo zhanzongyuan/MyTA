@@ -95,4 +95,8 @@ public class AssignmentListFragment extends Fragment {
         tempList.add(assignment3);
         datas.add(new SecondaryListAdapter.DataTree<Date, Assignment>(new Date(System.currentTimeMillis()), tempList));
     }
+    // 重新设置某一项assignment
+    public void setAssignmentByPositon() {
+
+    }
 }

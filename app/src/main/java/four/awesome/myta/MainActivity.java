@@ -84,9 +84,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             public Fragment getItem(int position) {
                 switch (position) {
                     case 0:
-                        return assignmentListFragment;
-                    case 1:
                         return fragmentCourse;
+                    case 1:
+                        return assignmentListFragment;
                     case 2:
                         return fragmentUser;
                 }
@@ -142,11 +142,12 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
     // 监听eventBus
     @Subscribe
-    public void onEventMainThread(Assignment assignment) {
+    public void onEventMainThread(Bundle bundle) {
+        Assignment assignment = (Assignment) bundle.getSerializable("assignment");
         Log.d("Eventbus", assignment.getName());
         Intent intent = new Intent(MainActivity.this, AssignActivity.class);
         intent.putExtra("assign", assignment);
-        startActivity(intent);
+        startActivityForResult(intent, 1);
     }
     @Override
     public void onDestroy() {
