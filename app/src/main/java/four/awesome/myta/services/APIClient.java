@@ -1,19 +1,10 @@
 package four.awesome.myta.services;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-
 import four.awesome.myta.models.User;
-import io.reactivex.Completable;
-import io.reactivex.CompletableObserver;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Action;
-import io.reactivex.observers.DisposableCompletableObserver;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -22,7 +13,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
-import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Help access the APIs
@@ -35,16 +26,16 @@ public class APIClient {
     private RetrofitService service;
 
     public interface RetrofitService {
-        @GET("auth{email}{password}")
-        Observable<User> authorize(@Path("email") String email,
-                                   @Path("password") String password);
+        @GET("auth")
+        Observable<Response<User>> authorize(@Query("email") String email,
+                                             @Query("password") String password);
 
         @FormUrlEncoded
         @POST("users")
-        Observable<User> register(@Field("username") String username,
-                             @Field("password") String password,
-                             @Field("email") String email,
-                             @Field("type") String type);
+        Observable<Response<User>> register(@Field("username") String username,
+                                            @Field("password") String password,
+                                            @Field("email") String email,
+                                            @Field("type") String type);
     }
 
     public APIClient() {
@@ -58,8 +49,8 @@ public class APIClient {
     }
 
     private void createRetrofitService() {
-        String HOST = "https://private-ee70cb-myta.apiary-mock.com/v1/";
-//        String HOST = "http://172.19.102.106/v1/";
+//        String HOST = "https://private-ee70cb-myta.apiary-mock.com/v1/";
+        String HOST = "http://119.23.234.29/v1/";
         service = new Retrofit.Builder()
                 .baseUrl(HOST)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -68,15 +59,16 @@ public class APIClient {
                 .create(RetrofitService.class);
     }
 
-    public void subscribeAuthorize(Observer<User> observer, String email, String password) {
+    public void subscribeAuthorize(Observer<Response<User>> observer,
+                                   String email, String password) {
         service.authorize(email, password)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
     }
 
-    public void subscribeRegister(Observer<User> observer, String username, String password,
-                                  String email, String type) {
+    public void subscribeRegister(Observer<Response<User>> observer, String username,
+                                  String password, String email, String type) {
         service.register(username, password, email, type)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())

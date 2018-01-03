@@ -21,7 +21,7 @@ public class Assignment {
         endTime = new Date();
         publishTime = new Date();
         detail = "";
-        creator = new User("","","","");
+        //creator = new User();
     }
     public Assignment(String name, Date publishTime, Date endTime, String detail, User creator) {
         this.name = name;
