@@ -86,15 +86,30 @@ public class LoginActivity extends AppCompatActivity
     @Override
     public void onNext(Response<User> res) {
         if (res.code() == 200) {
+            User user = res.body();
+            if (user == null)
+                return;
             makeToast(this, "登录成功");
-            String username = res.body().getUsername();
-            String apiKey = res.body().getApiKey();
+            String username = user.getUsername();
+            String name = user.getName();
+            String phone = user.getPhone();
+            String type = user.getType();
+            String email = user.getEmail();
+            String apiKey = user.getApiKey();
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("username", username);
+            editor.putString("name", name);
+            editor.putString("phone", phone);
+            editor.putString("type", type);
+            editor.putString("email", email);
             editor.putString("api_key", apiKey);
             editor.apply();
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("username", username);
+            intent.putExtra("name", name);
+            intent.putExtra("phone", phone);
+            intent.putExtra("type", type);
+            intent.putExtra("email", email);
             intent.putExtra("api_key", apiKey);
             startActivity(intent);
         } else if (res.code() == 400) {
