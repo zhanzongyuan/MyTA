@@ -76,10 +76,10 @@ public class AssignmentListFragment extends Fragment {
         assign_list_recyclerView.addItemDecoration(new RvDividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
     }
     private void setData() {
-        User temp_user = new User("张涵玮", "123", "student", "123@qq.com");
-        final Assignment assignment1 = new Assignment("assign1",new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), "细节", temp_user);
-        final Assignment assignment2 = new Assignment("assign2",new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), "细节", temp_user);
-        final Assignment assignment3 = new Assignment("assign3",new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), "细节", temp_user);
+        User temp_user = new User("张涵玮", "123", "student", "123@qq.com", "", "");
+        final Assignment assignment1 = new Assignment("assign1",new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), "细节", temp_user.getName());
+        final Assignment assignment2 = new Assignment("assign2",new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), "细节", temp_user.getName());
+        final Assignment assignment3 = new Assignment("assign3",new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), "细节", temp_user.getName());
         ArrayList<Assignment> tempList = new ArrayList<>();
         tempList.add(assignment1);
         tempList.add(assignment2);

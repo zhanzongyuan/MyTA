@@ -32,7 +32,6 @@ public class CourseFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // TODO: Complete page logic here.
         importData();
     }
 
@@ -48,7 +47,6 @@ public class CourseFragment extends Fragment {
         return view;
     }
 
-    // TODO: Complete related function here.
     public static CourseFragment newInstance() {
         if (fragment == null)
             fragment = new CourseFragment();
@@ -57,6 +55,9 @@ public class CourseFragment extends Fragment {
 
     public void importData() {
         courseList = new ArrayList<>();
+
+
+        // TODO: 涵玮实现获取课程信息数据，每个课程对应获取多个作业
         Course course = new Course("离散数学", "吴向军");
         List<Assignment> assignments = new ArrayList<>();
         Assignment assignment = new Assignment();

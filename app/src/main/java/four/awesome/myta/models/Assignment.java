@@ -12,7 +12,7 @@ import java.util.Date;
 public class Assignment {
     @SerializedName("ass_name")
     private String name;
-    // 用Date表示日期，具体到年月日，从1900年算起，Date date1=new Date(2015-1900,11,30,23,59,59) 2015年11月30日
+    // 用Date表示日期，具体到年月日，从1900          年算起，Date date1=new Date(2015-1900,11,30,23,59,59) 2015年11月30日
     @SerializedName("end_time")
     private Date endTime;
     @SerializedName("publish_time")

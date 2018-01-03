@@ -1,5 +1,9 @@
 package four.awesome.myta.services;
 
+import java.util.List;
+
+import four.awesome.myta.models.Assignment;
+import four.awesome.myta.models.Course;
 import four.awesome.myta.models.User;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -38,6 +42,9 @@ public class APIClient {
                                             @Field("phone") String phone,
                                             @Field("email") String email,
                                             @Field("type") String type);
+        @GET("/users/{email}/course")
+        Observable<Response<List<Course>>> requestCourse(@Query("email") String email);
+
     }
 
     public APIClient() {
