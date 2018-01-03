@@ -1,15 +1,10 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/gray"
     tools:context="four.awesome.myta.fragments.AssignmentFragment">
-
-    <!-- TODO: Update homework fragment layout -->
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
     <TextView
         android:background="@color/white"
         android:layout_width="match_parent"
@@ -110,4 +105,3 @@
     </LinearLayout>
 </LinearLayout>
 
-</FrameLayout>
