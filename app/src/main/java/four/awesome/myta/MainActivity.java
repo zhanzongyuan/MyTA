@@ -12,17 +12,23 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.lang.reflect.Field;
 import java.util.List;
 
 import four.awesome.myta.fragments.AssignmentFragment;
+import four.awesome.myta.fragments.AssignmentListFragment;
 import four.awesome.myta.fragments.CourseFragment;
 import four.awesome.myta.fragments.UserFragment;
+import four.awesome.myta.models.Assignment;
 import four.awesome.myta.models.Course;
 import four.awesome.myta.models.User;
 
@@ -31,7 +37,8 @@ import four.awesome.myta.models.User;
  */
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener{
 
-    private AssignmentFragment fragmentAssignment;
+    private AssignmentListFragment assignmentListFragment;
+    private AssignmentFragment assignmentFragment;
     private CourseFragment fragmentCourse;
     private UserFragment fragmentUser;
 
@@ -42,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        EventBus.getDefault().register(this);
         initialData();
         initialNavigationView();
     }
@@ -58,8 +65,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         if (user == null) user = new User();
 
         // TODO: Put data to three different fragments.
-        fragmentAssignment = AssignmentFragment.newInstance();
         fragmentCourse = CourseFragment.newInstance(user.getApiKey(), user.getID(), user.getType());
+        assignmentListFragment = AssignmentListFragment.newInstance();
+        assignmentFragment = AssignmentFragment.newInstance();
         fragmentUser = UserFragment.newInstance();
         fragmentUser.setUserData(user);
     }
@@ -76,9 +84,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             public Fragment getItem(int position) {
                 switch (position) {
                     case 0:
-                        return fragmentCourse;
+                        return assignmentListFragment;
                     case 1:
-                        return fragmentAssignment;
+                        return fragmentCourse;
                     case 2:
                         return fragmentUser;
                 }
@@ -132,7 +140,17 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     public void onPageScrollStateChanged(int state) {
 
     }
-
-
-
+    // 监听eventBus
+    @Subscribe
+    public void onEventMainThread(Assignment assignment) {
+        Log.d("Eventbus", assignment.getName());
+        Intent intent = new Intent(MainActivity.this, AssignActivity.class);
+        intent.putExtra("assign", assignment);
+        startActivity(intent);
+    }
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
 }

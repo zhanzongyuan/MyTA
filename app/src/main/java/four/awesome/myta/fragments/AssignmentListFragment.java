@@ -63,7 +63,6 @@ public class AssignmentListFragment extends Fragment {
         recyclerAdapter = new RecyclerAdapter(getContext());
         recyclerAdapter.setData(datas);
         assign_list_recyclerView.setAdapter(recyclerAdapter);
-        EventBus.getDefault().register(this);
         return assign_list_view;
     }
     private void setView() {
@@ -77,35 +76,23 @@ public class AssignmentListFragment extends Fragment {
     }
     private void setData() {
         User temp_user = new User();
+        temp_user.setName("张涵玮");
+        temp_user.setEmail("123@qq.com");
+        temp_user.setType("teacher");
+        temp_user.setCampusID("12345");
         final Assignment assignment1 = new Assignment("assign1",
                 new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()),
-                "细节",temp_user.getUsername());
+                "细节",temp_user);
         final Assignment assignment2 = new Assignment("assign2",
                 new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()),
-                "细节", temp_user.getUsername());
+                "细节", temp_user);
         final Assignment assignment3 = new Assignment("assign3",
                 new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()),
-                "细节", temp_user.getUsername());
+                "细节", temp_user);
         ArrayList<Assignment> tempList = new ArrayList<>();
         tempList.add(assignment1);
         tempList.add(assignment2);
         tempList.add(assignment3);
         datas.add(new SecondaryListAdapter.DataTree<Date, Assignment>(new Date(System.currentTimeMillis()), tempList));
     }
-    private void changeFragment(Assignment assignment) {
-        AssignmentFragment assignmentFragment = new AssignmentFragment();
-        assignmentFragment.setAssignment_data(assignment);
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.hide(this);
-        fragmentTransaction.replace(R.id.frame_layout, assignmentFragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-    }
-    @Subscribe
-    public void onEventMainThread(Assignment assignment) {
-        Log.d("Eventbus", assignment.getName());
-        changeFragment(assignment);
-    }
-
 }

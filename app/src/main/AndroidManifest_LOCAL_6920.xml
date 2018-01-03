@@ -24,9 +24,8 @@
             android:name=".RegisterActivity"
             android:noHistory="true"
             android:windowSoftInputMode="adjustNothing"></activity>
+        <activity android:name=".MainActivity"></activity>
         <activity android:name=".CourseInfo"></activity>
-        <activity android:name=".MainActivity" />
-        <activity android:name=".AssignActivity" />
     </application>
 
 </manifest>
