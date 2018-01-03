@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
         // TODO: Put data to three different fragments.
         fragmentAssignment = AssignmentFragment.newInstance();
-        fragmentCourse = CourseFragment.newInstance();
+        fragmentCourse = CourseFragment.newInstance("");
         fragmentUser = UserFragment.newInstance();
     }
     /**
