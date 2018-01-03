@@ -26,6 +26,7 @@ public class RegisterActivity extends AppCompatActivity
     private EditText editUsername;
     private EditText editEmail;
     private EditText editName;
+    private EditText editCampusID;
     private EditText editPhone;
     private EditText editPsw;
     private EditText editConfirmPsw;
@@ -59,6 +60,7 @@ public class RegisterActivity extends AppCompatActivity
                         editUsername.getText().toString(),
                         editPsw.getText().toString(),
                         editName.getText().toString(),
+                        editCampusID.getText().toString(),
                         editPhone.getText().toString(),
                         editEmail.getText().toString(),
                         type
@@ -71,6 +73,7 @@ public class RegisterActivity extends AppCompatActivity
         editUsername = (EditText) findViewById(R.id.edit_register_username);
         editEmail = (EditText) findViewById(R.id.edit_register_email);
         editName = (EditText) findViewById(R.id.edit_register_name);
+        editCampusID = (EditText) findViewById(R.id.edit_register_campus_id);
         editPhone = (EditText) findViewById(R.id.edit_register_phone);
         editPsw = (EditText) findViewById(R.id.edit_register_password);
         editConfirmPsw = (EditText) findViewById(R.id.edit_register_confirm_password);
