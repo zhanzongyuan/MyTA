@@ -7,6 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -37,11 +40,14 @@ public class AssignmentFragment extends Fragment {
         }
         return fragment;
     }
+    public void setAssignment_data(Assignment assignment_data) {
+        this.assignment_data = assignment_data;
+        setData();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -60,9 +66,22 @@ public class AssignmentFragment extends Fragment {
         assign_end_time = (TextView) assign_view.findViewById(R.id.end_time);
         assign_detail = (TextView) assign_view.findViewById(R.id.assign_detail);
     }
+
+    //定义相关数据，但和User交接部分未完成
     private void setData() {
-//        if (assignment_data == null) {
-//
-//        }
+        if (assignment_data == null) {
+            User temp_user = new User("张涵玮", "123", "student", "123@qq.com");
+            assignment_data = new Assignment("assign1",new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), "细节", temp_user);
+        }
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日");
+        assign_name.setText(assignment_data.getName());
+        assign_start_time.setText(simpleDateFormat.format(assignment_data.getPublishTime()));
+        assign_end_time.setText(simpleDateFormat.format(assignment_data.getEndTime()));
+        assign_detail.setText(assignment_data.getDetail());
+    }
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 }
