@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.LayoutInflaterCompat;
+import android.support.v4.view.ViewGroupCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,7 +77,7 @@ public class UserFragment extends Fragment {
 
         if (user_data == null) {
             user_data = new User();
-            user_data.setID(-1);
+            user_data.setCampusID("15xxxxxx");
             user_data.setEmail("None");
             user_data.setPhone("None");
             user_data.setName("None");
@@ -92,22 +94,43 @@ public class UserFragment extends Fragment {
         change_user_data.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final EditText change_name = new EditText(context);
-                final EditText change_phone = new EditText(context);
-                final EditText change_id = new EditText(context);
+                LayoutInflater inflater = getLayoutInflater();
+                View dialog = inflater.inflate(R.layout.dialog, (ViewGroup) user_view.findViewById(R.id.dialog), false);
+                final EditText change_name = (EditText) dialog.findViewById(R.id.change_user_name);
+                final EditText change_id = (EditText) dialog.findViewById(R.id.change_id);
+                final EditText change_phone = (EditText) dialog.findViewById(R.id.change_phone);
+                final EditText change_password = (EditText) dialog.findViewById(R.id.change_password);
+                final EditText comfirm_password = (EditText) dialog.findViewById(R.id.comfirm_password);
+
+                change_name.setText(user_data.getName());
+                change_id.setText(user_data.getCampusID());
+                change_phone.setText(user_data.getPhone());
+                change_password.setText(user_data.getPassword());
+                change_password.setText(user_data.getPassword());
+
                 new AlertDialog.Builder(context).setTitle("修改个人信息")
-                        .setView(change_name)
-                        .setView(change_id)
-                        .setView(change_phone)
+                        .setView(dialog)
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 String name = change_name.getText().toString();
                                 String id =  change_id.getText().toString();
                                 String phone = change_phone.getText().toString();
-                                if (name.equals("")||id.equals("")) {
-                                    Toast.makeText(context, "姓名或学号不能为空", Toast.LENGTH_LONG).show();
+                                String password = change_password.getText().toString();
+                                String c_password = comfirm_password.getText().toString();
                                     // TODO: 18-1-3 补充更多的合法性检测
+                                if (name.isEmpty()) {
+                                    Toast.makeText(context, "姓名不能为空", Toast.LENGTH_LONG).show();
+                                } else if (id.isEmpty()) {
+                                    Toast.makeText(context, "学号不能为空", Toast.LENGTH_LONG).show();
+                                } else if (password.isEmpty()) {
+                                    Toast.makeText(context, "密码不能为空", Toast.LENGTH_LONG).show();
+                                } else if (password.length() < 8 ||
+                                        password.matches("[0-9]+") ||
+                                        password.matches("[A-Za-z]+")) {
+                                    Toast.makeText(context, "密码至少为8位，必须是字母和数字的组合", Toast.LENGTH_LONG).show();
+                                } else if (!password.equals(c_password)) {
+                                    Toast.makeText(context, "两次输入的密码不一致", Toast.LENGTH_LONG).show();
                                 } else {
                                     if (commitChange(name, id, phone)) {
                                         user_name.setText(name);
@@ -130,6 +153,7 @@ public class UserFragment extends Fragment {
     }
 
     private boolean commitChange(String name, String id, String phone) {
+        // TODO: 18-1-3 上传至后端 
         return false;
     }
 }
