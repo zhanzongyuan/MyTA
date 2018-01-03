@@ -55,10 +55,11 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
         Intent intent = getIntent();
         User user = (User) intent.getSerializableExtra("user");
+        if (user == null) user = new User();
 
         // TODO: Put data to three different fragments.
         fragmentAssignment = AssignmentFragment.newInstance();
-        fragmentCourse = CourseFragment.newInstance("");
+        fragmentCourse = CourseFragment.newInstance(user.getApiKey(), user.getID(), user.getType());
         fragmentUser = UserFragment.newInstance();
         fragmentUser.setUserData(user);
     }
@@ -75,9 +76,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             public Fragment getItem(int position) {
                 switch (position) {
                     case 0:
-                        return fragmentAssignment;
-                    case 1:
                         return fragmentCourse;
+                    case 1:
+                        return fragmentAssignment;
                     case 2:
                         return fragmentUser;
                 }
@@ -100,10 +101,10 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             //点击BottomNavigationView的Item项，切换ViewPager页面
             //menu/navigation.xml里加的android:orderInCategory属性就是下面item.getOrder()取的值
             switch (item.getItemId()) {
-                case R.id.icon_assignment:
+                case R.id.icon_course:
                     viewPager.setCurrentItem(0);
                     break;
-                case R.id.icon_course:
+                case R.id.icon_assignment:
                     viewPager.setCurrentItem(1);
                     break;
                 case R.id.icon_user_info:

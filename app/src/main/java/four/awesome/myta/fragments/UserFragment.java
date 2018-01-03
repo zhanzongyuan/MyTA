@@ -62,7 +62,8 @@ public class UserFragment extends Fragment {
         user_phone = (TextView) user_view.findViewById(R.id.user_phone);
 
         if (user_data == null) {
-            user_data = new User("None", "None", "None", "None", "None", "None");
+//            user_data = new User("None", "None", "None", "None", "None", "None");
+            user_data = new User();
         }
 
         user_img.setImageResource(R.mipmap.lenna_round);

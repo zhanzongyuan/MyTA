@@ -58,6 +58,7 @@ public class MyCourseListAdapter<T> extends RecyclerView.Adapter<MyCourseListAda
 
     @Override
     public int getItemCount() {
+        if (mDataset == null) return 0;
         return mDataset.size();
     }
 

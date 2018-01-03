@@ -1,5 +1,6 @@
 package four.awesome.myta.services;
 
+import java.util.Currency;
 import java.util.List;
 
 import four.awesome.myta.models.Assignment;
@@ -99,6 +100,22 @@ public class APIClient {
                                   String password, String name, String campusID,
                                   String phone, String email, String type) {
         service.register(username, password, name, campusID, phone, email, type)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+    }
+
+
+    public void subscribeCourse(Observer<Response<List<Course>>> observer, String apiKey, int id) {
+        service.listCoursesByUserID(apiKey, id)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+    }
+
+
+    public void subscribeNewCourse(Observer<Response<Course>> observer, String apiKey, String courseName, int teacherID) {
+        service.createCourse(apiKey, courseName, teacherID)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
