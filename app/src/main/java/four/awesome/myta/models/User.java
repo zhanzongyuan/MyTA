@@ -12,6 +12,10 @@ public class User {
 
     private String password;
 
+    private String name;
+
+    private String phone;
+
     private String type;
 
     private String email;
@@ -19,15 +23,19 @@ public class User {
     @SerializedName("api_key")
     private String apiKey;
 
-    public User(String usr, String psw, String typ, String eml) {
+    public User(String usr, String psw, String nm, String ph, String typ, String eml) {
         username = usr;
         password = psw;
+        name = nm;
+        phone = ph;
         type = typ;
         email = eml;
     }
 
     public String getUsername() { return username; }
     public String getPassword() { return password; }
+    public String getName() { return name; }
+    public String getPhone() { return phone; }
     public String getType() { return type; }
     public String getEmail() { return email; }
     public String getApiKey() { return apiKey; }

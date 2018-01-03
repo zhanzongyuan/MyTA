@@ -37,14 +37,14 @@ public class LoginActivity extends AppCompatActivity
 
         initVariables();
 
-        String username = sharedPreferences.getString("username", null);
-        if (username != null) {
-            String apiKey = sharedPreferences.getString("api_key", null);
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra("username", username);
-            intent.putExtra("api_key", apiKey);
-            startActivity(intent);
-        }
+//        String username = sharedPreferences.getString("username", null);
+//        if (username != null) {
+//            String apiKey = sharedPreferences.getString("api_key", null);
+//            Intent intent = new Intent(this, MainActivity.class);
+//            intent.putExtra("username", username);
+//            intent.putExtra("api_key", apiKey);
+//            startActivity(intent);
+//        }
 
         buttonRegister.setOnClickListener(this);
         buttonForget.setOnClickListener(this);
@@ -63,6 +63,13 @@ public class LoginActivity extends AppCompatActivity
             case R.id.button_login_submit:
                 String username = editLoginEmail.getText().toString();
                 String password = editLoginPassword.getText().toString();
+
+                // For development
+                if (username.equals("admin")) {
+                    startActivity(new Intent(this, MainActivity.class));
+                    return;
+                }
+
                 (new APIClient()).subscribeAuthorize(this, username, password);
                 break;
             case R.id.button_login_register:

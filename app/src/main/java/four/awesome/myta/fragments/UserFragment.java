@@ -72,7 +72,9 @@ public class UserFragment extends Fragment {
     //设置界面控件对象的有关属性
     private void setUserData() {
         if (user_data == null) {
-            user_data = new User("张涵玮", "123", "student", "123@qq.com");
+            user_data = new User(
+                    "张涵玮",
+                    "", "张涵玮", "17665310114","student", "123@qq.com");
             // TODO: 18-1-2 不知user数据在哪，请在这里设置
         }
 

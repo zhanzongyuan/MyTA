@@ -25,6 +25,8 @@ public class RegisterActivity extends AppCompatActivity
 
     private EditText editUsername;
     private EditText editEmail;
+    private EditText editName;
+    private EditText editPhone;
     private EditText editPsw;
     private EditText editConfirmPsw;
     private RadioGroup radioGroupType;
@@ -56,6 +58,8 @@ public class RegisterActivity extends AppCompatActivity
                         this,
                         editUsername.getText().toString(),
                         editPsw.getText().toString(),
+                        editName.getText().toString(),
+                        editPhone.getText().toString(),
                         editEmail.getText().toString(),
                         type
                 );
@@ -66,6 +70,8 @@ public class RegisterActivity extends AppCompatActivity
     private void initVariables() {
         editUsername = (EditText) findViewById(R.id.edit_register_username);
         editEmail = (EditText) findViewById(R.id.edit_register_email);
+        editName = (EditText) findViewById(R.id.edit_register_name);
+        editPhone = (EditText) findViewById(R.id.edit_register_phone);
         editPsw = (EditText) findViewById(R.id.edit_register_password);
         editConfirmPsw = (EditText) findViewById(R.id.edit_register_confirm_password);
         radioGroupType = (RadioGroup) findViewById(R.id.radio_group_register_type);
@@ -77,6 +83,7 @@ public class RegisterActivity extends AppCompatActivity
         String password = editPsw.getText().toString();
         String confirmPsw = editConfirmPsw.getText().toString();
         String email = editEmail.getText().toString();
+        String phone = editPhone.getText().toString();
         if (username.isEmpty()) {
             makeToast(this, "请输入用户名");
             return false;
@@ -93,6 +100,10 @@ public class RegisterActivity extends AppCompatActivity
         if (!email.matches(
                 "^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(.[a-zA-Z0-9-]+)*$")) {
             makeToast(this, "请输入正确的邮箱地址");
+            return false;
+        }
+        if (!phone.matches("^[0-9]{11}$")) {
+            makeToast(this, "请输入正确的手机号码");
             return false;
         }
         if (password.length() < 8 ||
