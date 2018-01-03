@@ -84,7 +84,7 @@ public class UserFragment extends Fragment {
         user_img.setImageResource(R.mipmap.lenna_round);
         // TODO: 18-1-3 User信息中没有头像
         user_name.setText(user_data.getUsername());
-        user_id.setText("没有学号信息");
+        user_id.setText(user_data.getCampusID());
         // TODO: 18-1-3 User没有学号信息
         user_email.setText(user_data.getEmail());
         user_phone.setText(user_data.getPhone());

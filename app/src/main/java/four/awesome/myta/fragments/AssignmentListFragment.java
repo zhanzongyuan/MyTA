@@ -76,9 +76,7 @@ public class AssignmentListFragment extends Fragment {
         assign_list_recyclerView.addItemDecoration(new RvDividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
     }
     private void setData() {
-        User temp_user = new User(
-                "张涵玮",
-                "", "张涵玮", "17665310114","student", "123@qq.com");
+        User temp_user = new User();
         final Assignment assignment1 = new Assignment("assign1",
                 new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()),
                 "细节",temp_user.getUsername());

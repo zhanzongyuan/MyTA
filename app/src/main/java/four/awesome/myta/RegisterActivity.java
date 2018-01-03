@@ -138,6 +138,7 @@ public class RegisterActivity extends AppCompatActivity
             makeToast(this, "登录成功");
             String username = user.getUsername();
             String name = user.getName();
+            String campusID = user.getCampusID();
             String phone = user.getPhone();
             String type = user.getType();
             String email = user.getEmail();
@@ -146,18 +147,14 @@ public class RegisterActivity extends AppCompatActivity
             SharedPreferences.Editor editor = data.edit();
             editor.putString("username", username);
             editor.putString("name", name);
+            editor.putString("campus_id", campusID);
             editor.putString("phone", phone);
             editor.putString("type", type);
             editor.putString("email", email);
             editor.putString("api_key", apiKey);
             editor.apply();
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            intent.putExtra("username", username);
-            intent.putExtra("name", name);
-            intent.putExtra("phone", phone);
-            intent.putExtra("type", type);
-            intent.putExtra("email", email);
-            intent.putExtra("api_key", apiKey);
+            intent.putExtra("user", user);
             startActivity(intent);
         } else {
             makeToast(this, "用户名或邮箱已存在");
