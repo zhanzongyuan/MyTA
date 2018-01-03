@@ -145,6 +145,7 @@
         <RadioButton
             android:id="@+id/radio_register_student"
             android:buttonTint="@android:color/white"
+            android:checked="true"
             android:hint="@string/radio_student"
             android:textColorHint="@android:color/white"
             android:layout_width="wrap_content"

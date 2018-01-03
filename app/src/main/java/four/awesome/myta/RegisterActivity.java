@@ -1,22 +1,27 @@
 package four.awesome.myta;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import four.awesome.myta.models.User;
 import four.awesome.myta.services.APIClient;
-import io.reactivex.CompletableObserver;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
+import retrofit2.Response;
+
+import static four.awesome.myta.LoginActivity.PREF_NAME;
+import static four.awesome.myta.LoginActivity.makeToast;
 
 public class RegisterActivity extends AppCompatActivity
-        implements View.OnClickListener, Observer<User> {
+        implements View.OnClickListener,
+        Observer<Response<User>> {
 
     private EditText editUsername;
     private EditText editEmail;
@@ -41,15 +46,16 @@ public class RegisterActivity extends AppCompatActivity
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_register_submit:
-                // TODO Validation check
-                String pswHash = LoginActivity.md5Hash(editPsw.getText().toString());
+                if (!checkValidation()) {
+                    return;
+                }
                 String type = radioGroupType.getCheckedRadioButtonId() ==
                         R.id.radio_register_student ? "student" : "teacher";
                 APIClient client = new APIClient();
                 client.subscribeRegister(
                         this,
                         editUsername.getText().toString(),
-                        pswHash,
+                        editPsw.getText().toString(),
                         editEmail.getText().toString(),
                         type
                 );
@@ -66,26 +72,72 @@ public class RegisterActivity extends AppCompatActivity
         buttonRegister = (Button) findViewById(R.id.button_register_submit);
     }
 
+    private boolean checkValidation() {
+        String username = editUsername.getText().toString();
+        String password = editPsw.getText().toString();
+        String confirmPsw = editConfirmPsw.getText().toString();
+        String email = editEmail.getText().toString();
+        if (username.isEmpty()) {
+            makeToast(this, "请输入用户名");
+            return false;
+        } else if (email.isEmpty()) {
+            makeToast(this, "请输入邮箱");
+            return false;
+        } else if (password.isEmpty()) {
+            makeToast(this, "请输入密码");
+            return false;
+        } else if (confirmPsw.isEmpty()) {
+            makeToast(this, "请再次输入密码");
+            return false;
+        }
+        if (!email.matches(
+                "^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(.[a-zA-Z0-9-]+)*$")) {
+            makeToast(this, "请输入正确的邮箱地址");
+            return false;
+        }
+        if (password.length() < 8 ||
+            password.matches("[0-9]+") ||
+            password.matches("[A-Za-z]+")) {
+            makeToast(this, "密码至少为8位，必须是字母和数字的组合");
+            return false;
+        }
+        if (!password.equals(confirmPsw)) {
+            makeToast(this, "两次输入的密码不一致");
+            return false;
+        }
+        return true;
+    }
+
     /**
-     * Implement Observer<User>
+     * Implement Observer<Response<User>>
      */
     @Override
     public void onSubscribe(Disposable d) {
 
     }
     @Override
-    public void onNext(User user) {
-        Toast.makeText(this, user.getApiKey(), Toast.LENGTH_SHORT).show();
+    public void onNext(Response<User> res) {
+        if (res.code() == 201) {
+            makeToast(this, "登录成功");
+            String username = res.body().getUsername();
+            String apiKey = res.body().getApiKey();
+            SharedPreferences data = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = data.edit();
+            editor.putString("username", username);
+            editor.putString("api_key", apiKey);
+            editor.apply();
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.putExtra("username", username);
+            intent.putExtra("api_key", apiKey);
+            startActivity(intent);
+        } else {
+            makeToast(this, "用户名或邮箱已存在");
+        }
     }
     @Override
     public void onError(Throwable e) {
         e.printStackTrace();
     }
     @Override
-    public void onComplete() {
-        // Log in successfully, jump to main activity.
-        Toast.makeText(this, "Log in successfully", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivityForResult(intent, 0);
-    }
+    public void onComplete() {}
 }

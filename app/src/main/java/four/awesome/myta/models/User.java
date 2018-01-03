@@ -1,18 +1,26 @@
 package four.awesome.myta.models;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Model User
  */
 
 public class User {
+
     private String username;
+
     private String password;
+
     private String type;
+
     private String email;
+
+    @SerializedName("api_key")
     private String apiKey;
 
-    public User(String usrn, String psw, String typ, String eml) {
-        username = usrn;
+    public User(String usr, String psw, String typ, String eml) {
+        username = usr;
         password = psw;
         type = typ;
         email = eml;
