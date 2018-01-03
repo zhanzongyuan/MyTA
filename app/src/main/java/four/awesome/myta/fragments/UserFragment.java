@@ -103,9 +103,9 @@ public class UserFragment extends Fragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 String name = change_name.getText().toString();
-                                int id =  Integer.parseInt(change_id.getText().toString());
+                                String id =  change_id.getText().toString();
                                 String phone = change_phone.getText().toString();
-                                if (name.equals("")||id == 0) {
+                                if (name.equals("")||id.equals("")) {
                                     Toast.makeText(context, "姓名或学号不能为空", Toast.LENGTH_LONG).show();
                                     // TODO: 18-1-3 补充更多的合法性检测
                                 } else {
@@ -129,7 +129,7 @@ public class UserFragment extends Fragment {
         user_data = user;
     }
 
-    private boolean commitChange(String name, int id, String phone) {
+    private boolean commitChange(String name, String id, String phone) {
         return false;
     }
 }
