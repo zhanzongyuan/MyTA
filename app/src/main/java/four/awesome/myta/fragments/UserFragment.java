@@ -1,12 +1,18 @@
 package four.awesome.myta.fragments;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -24,9 +30,12 @@ public class UserFragment extends Fragment {
     private TextView user_id;
     private TextView user_email;
     private TextView user_phone;
+    private Button change_user_data;
+    private Button course_data;
     //界面组件对象
 
     private static UserFragment fragment;
+    private Context context;
     View user_view;
     //用户界面布局对象
 
@@ -46,6 +55,7 @@ public class UserFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         user_view = inflater.inflate(R.layout.fragment_user, container, false);
+        context = user_view.getContext();
         setView();
         return user_view;
     }
@@ -60,25 +70,66 @@ public class UserFragment extends Fragment {
         user_id = (TextView) user_view.findViewById(R.id.user_id);
         user_email = (TextView) user_view.findViewById(R.id.user_email);
         user_phone = (TextView) user_view.findViewById(R.id.user_phone);
+        change_user_data = (Button) user_view.findViewById(R.id.chang_user_data);
+        course_data = (Button) user_view.findViewById(R.id.course_data);
 
         if (user_data == null) {
-            user_data = new User("None", "None", "None", "None", "None", "None");
+            user_data = new User();
+            user_data.setID(-1);
+            user_data.setEmail("None");
+            user_data.setPhone("None");
+            user_data.setName("None");
         }
 
         user_img.setImageResource(R.mipmap.lenna_round);
         // TODO: 18-1-3 User信息中没有头像
         user_name.setText(user_data.getUsername());
         user_id.setText("没有学号信息");
-        // TODO: 18-1-3 User没有学号信息 
+        // TODO: 18-1-3 User没有学号信息
         user_email.setText(user_data.getEmail());
         user_phone.setText(user_data.getPhone());
+
+        change_user_data.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final EditText change_name = new EditText(context);
+                final EditText change_phone = new EditText(context);
+                final EditText change_id = new EditText(context);
+                new AlertDialog.Builder(context).setTitle("修改个人信息")
+                        .setView(change_name)
+                        .setView(change_id)
+                        .setView(change_phone)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String name = change_name.getText().toString();
+                                int id =  Integer.parseInt(change_id.getText().toString());
+                                String phone = change_phone.getText().toString();
+                                if (name.equals("")||id == 0) {
+                                    Toast.makeText(context, "姓名或学号不能为空", Toast.LENGTH_LONG).show();
+                                    // TODO: 18-1-3 补充更多的合法性检测
+                                } else {
+                                    if (commitChange(name, id, phone)) {
+                                        user_name.setText(name);
+                                        user_id.setText(id);
+                                        user_phone.setText(phone);
+                                    } else {
+                                        Log.e("COMMIT FAILED", "Failed to commit User data change!");
+                                    }
+                                }
+                            }
+                        })
+                        .setNegativeButton("取消",null)
+                        .show();
+            }
+        });
     }
     //设置界面控件对象的有关属性
     public void setUserData(User user) {
         user_data = user;
     }
 
-    private void changeUserData() {
-
+    private boolean commitChange(String name, int id, String phone) {
+        return false;
     }
 }
