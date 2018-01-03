@@ -19,6 +19,7 @@ public class User implements Serializable {
 
     private String name;
 
+    @SerializedName("campus_id")
     private String campusID;
 
     private String phone;

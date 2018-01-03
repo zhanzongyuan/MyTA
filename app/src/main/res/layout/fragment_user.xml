@@ -96,6 +96,7 @@
             android:text="修改个人信息"/>
 
         <Button
+            android:id="@+id/course_data"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"

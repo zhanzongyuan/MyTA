@@ -92,6 +92,7 @@ public class LoginActivity extends AppCompatActivity
             makeToast(this, "登录成功");
             String username = user.getUsername();
             String name = user.getName();
+            String campusID = user.getCampusID();
             String phone = user.getPhone();
             String type = user.getType();
             String email = user.getEmail();
@@ -99,6 +100,7 @@ public class LoginActivity extends AppCompatActivity
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("username", username);
             editor.putString("name", name);
+            editor.putString("campus_id", campusID);
             editor.putString("phone", phone);
             editor.putString("type", type);
             editor.putString("email", email);
