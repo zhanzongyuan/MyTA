@@ -1,5 +1,6 @@
 package four.awesome.myta.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.widget.ExpandableListView;
 import java.util.ArrayList;
 import java.util.List;
 
+import four.awesome.myta.MainActivity;
 import four.awesome.myta.R;
 import four.awesome.myta.adapter.MyExpandAdapter;
 import four.awesome.myta.models.Assignment;
@@ -31,8 +33,6 @@ public class CourseFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        importData();
     }
 
     @Override
@@ -46,19 +46,17 @@ public class CourseFragment extends Fragment {
 
         return view;
     }
-
     public static CourseFragment newInstance() {
         if (fragment == null)
             fragment = new CourseFragment();
         return fragment;
     }
 
-    public void importData() {
-        courseList = new ArrayList<>();
+    public void importData(List<Course> courses) {
+        if (courseList == null)
+            courseList = courses;
 
-
-        // TODO: 涵玮实现获取课程信息数据，每个课程对应获取多个作业
-        Course course = new Course("离散数学", "吴向军");
+        Course course = new Course(1, "离散数学", "吴向军");
         List<Assignment> assignments = new ArrayList<>();
         Assignment assignment = new Assignment();
         assignment.setName("期末");

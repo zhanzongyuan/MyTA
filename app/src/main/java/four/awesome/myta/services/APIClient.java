@@ -42,8 +42,6 @@ public class APIClient {
                                             @Field("phone") String phone,
                                             @Field("email") String email,
                                             @Field("type") String type);
-        @GET("/users/{email}/course")
-        Observable<Response<List<Course>>> requestCourse(@Query("email") String email);
 
     }
 

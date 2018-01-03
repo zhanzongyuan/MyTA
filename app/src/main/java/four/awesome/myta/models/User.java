@@ -2,11 +2,14 @@ package four.awesome.myta.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+import java.util.List;
+
 /**
  * Model User
  */
 
-public class User {
+public class User implements Serializable {
 
     private String username;
 
@@ -22,6 +25,10 @@ public class User {
 
     @SerializedName("api_key")
     private String apiKey;
+
+    private List<String> courses;
+
+    private List<String> assignments;
 
     public User(String usr, String psw, String nm, String ph, String typ, String eml) {
         username = usr;
@@ -39,10 +46,14 @@ public class User {
     public String getType() { return type; }
     public String getEmail() { return email; }
     public String getApiKey() { return apiKey; }
+    public List<String> getCourses() { return courses; }
+    public List<String> getAssignments() { return assignments; }
 
     public void setUsername(String username) { this.username = username; }
     public void setPassword(String password) { this.password = password; }
     public void setType(String type) { this.type = type; }
     public void setEmail(String email) { this.email = email; }
     public void setApiKey(String apiKey) { this.apiKey = apiKey; }
+    public void setCourses(List<String> courses) { this.courses = courses; }
+    public void setAssignments(List<String> assignments) { this.assignments = assignments; }
 }

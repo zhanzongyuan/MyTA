@@ -1,5 +1,6 @@
 package four.awesome.myta;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private AssignmentFragment fragmentAssignment;
     private CourseFragment fragmentCourse;
     private UserFragment fragmentUser;
+    private User user;
 
     private BottomNavigationView bottomNavigationView;
     private ViewPager viewPager;
@@ -49,11 +51,16 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
 
     private void initialData() {
+        viewPager = (ViewPager) findViewById(R.id.frame_layout);
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
+
+        Intent intent = getIntent();
+        user = (User) intent.getSerializableExtra("user");
+
+        // TODO: Put data to three different fragments.
         fragmentAssignment = AssignmentFragment.newInstance();
         fragmentCourse = CourseFragment.newInstance();
         fragmentUser = UserFragment.newInstance();
-        viewPager = (ViewPager) findViewById(R.id.frame_layout);
-        bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
     }
     /**
      * Initial navigation item click event.
