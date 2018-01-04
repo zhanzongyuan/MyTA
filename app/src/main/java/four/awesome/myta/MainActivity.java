@@ -1,6 +1,7 @@
 package four.awesome.myta;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
@@ -43,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private CourseFragment fragmentCourse;
     private UserFragment fragmentUser;
 
+    private SharedPreferences data;
+
     private BottomNavigationView bottomNavigationView;
     private ViewPager viewPager;
 
@@ -55,9 +58,12 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         initialNavigationView();
     }
 
-
+    public SharedPreferences getData() {
+        return data;
+    }
 
     private void initialData() {
+        data = getSharedPreferences("data", MODE_PRIVATE);
         viewPager = (ViewPager) findViewById(R.id.frame_layout);
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
 
@@ -71,6 +77,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         assignmentFragment = AssignmentFragment.newInstance();
         fragmentUser = UserFragment.newInstance();
         fragmentUser.setUserData(user);
+        SharedPreferences temp_data = getSharedPreferences("data", MODE_PRIVATE);
+        fragmentUser.setSharedPerferences(temp_data);
+        fragmentUser.setMain(this);
     }
     /**
      * Initial navigation item click event.

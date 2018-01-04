@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import four.awesome.myta.LoginActivity;
 import four.awesome.myta.MainActivity;
 import four.awesome.myta.R;
 import four.awesome.myta.models.User;
@@ -25,6 +26,8 @@ import four.awesome.myta.services.APIClient;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import retrofit2.Response;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Fragment for user list.
@@ -39,7 +42,11 @@ public class UserFragment extends Fragment implements Observer<Response<User>> {
     private TextView user_phone;
     private Button change_user_data;
     private Button course_data;
+    private Button logout;
+    private MainActivity main;
     //界面组件对象
+
+    SharedPreferences data;
 
     private static UserFragment fragment;
     private Context context;
@@ -79,6 +86,7 @@ public class UserFragment extends Fragment implements Observer<Response<User>> {
         user_phone = (TextView) user_view.findViewById(R.id.user_phone);
         change_user_data = (Button) user_view.findViewById(R.id.chang_user_data);
         course_data = (Button) user_view.findViewById(R.id.course_data);
+        logout = (Button) user_view.findViewById(R.id.logout);
 
         if (user_data == null) {
             user_data = new User();
@@ -140,11 +148,26 @@ public class UserFragment extends Fragment implements Observer<Response<User>> {
                         .show();
             }
         });
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences.Editor editor = data.edit();
+                editor.clear();
+                editor.commit();
+                Intent intent = new Intent(context, LoginActivity.class);
+                startActivity(intent);
+                main.finish();
+            }
+        });
     }
     //设置界面控件对象的有关属性
     public void setUserData(User user) {
         user_data = user;
     }
+
+    public void setSharedPerferences(SharedPreferences temp_data) { data = temp_data; }
+
+    public void setMain(MainActivity m) { main = m; }
 
     private void commitChange(String name, String id, String phone, String password) {
         (new APIClient()).subscribeUpdateUser(
