@@ -4,33 +4,45 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
     <TextView
+        android:textAlignment="center"
+        android:id="@+id/assignName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAlignment="center"
+        android:text="数据库大作业"
+        android:textSize="20dp"
+        android:textStyle="bold"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:text="作业详情"/>
-    <TextView
-        android:id="@+id/assignName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="数据库大作业"
         />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="发布时间:2018年1月1日"
-        android:id="@+id/startTime"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="DDL:2018年1月6日"
-        android:id="@+id/endTime"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="作业详情"
-        android:id="@+id/detail"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:textSize="17dp"
+            android:text="发布时间 : "/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="17dp"
+            android:text="2018年1月1日"
+            android:id="@+id/startTime"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:textSize="17dp"
+            android:text="DDL : "/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="17dp"
+            android:text="2018年1月6日"
+            android:id="@+id/endTime"
+            />
+    </LinearLayout>
 </LinearLayout>

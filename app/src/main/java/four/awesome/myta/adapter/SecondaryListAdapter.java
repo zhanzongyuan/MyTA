@@ -186,12 +186,6 @@ public abstract class SecondaryListAdapter<GVH, SVH extends RecyclerView.ViewHol
     public final int getItemViewType(int position) {
         return getItemStatusByPosition(position).getViewType();
     }
-    /**
-     * Get item' s status include view type, group item index and subitem index.
-     *
-     * @param position Position
-     *
-     */
     private ItemStatus getItemStatusByPosition(int position) {
         ItemStatus itemStatus = new ItemStatus();
         int count = 0;
