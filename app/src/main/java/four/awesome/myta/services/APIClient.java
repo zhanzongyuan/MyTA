@@ -56,8 +56,8 @@ public class APIClient {
 
         @FormUrlEncoded
         @PUT("users/{ID}")
-        Observable<Response<User>> updateUser(@Query("api_key") String apiKey,
-                                              @Path("ID") int userID,
+        Observable<Response<User>> updateUser(@Path("ID") int userID,
+                                              @Query("api_key") String apiKey,
                                               @Field("username") String username,
                                               @Field("password") String password,
                                               @Field("name") String name,
@@ -122,7 +122,7 @@ public class APIClient {
     public void subscribeUpdateUser(Observer<Response<User>> observer, String apiKey,
                                     int userID, String username, String password, String name,
                                     String campusID, String phone, String email, String type) {
-        service.updateUser(apiKey, userID, username, password, name, campusID, phone, email, type)
+        service.updateUser(userID, apiKey, username, password, name, campusID, phone, email, type)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);

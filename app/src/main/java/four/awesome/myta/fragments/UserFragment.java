@@ -90,9 +90,8 @@ public class UserFragment extends Fragment implements Observer<Response<User>> {
 
         user_img.setImageResource(R.mipmap.lenna_round);
         // TODO: 18-1-3 User信息中没有头像
-        user_name.setText(user_data.getUsername());
+        user_name.setText(user_data.getName());
         user_id.setText(user_data.getCampusID());
-        // TODO: 18-1-3 User没有学号信息
         user_email.setText(user_data.getEmail());
         user_phone.setText(user_data.getPhone());
 
@@ -110,8 +109,6 @@ public class UserFragment extends Fragment implements Observer<Response<User>> {
                 change_name.setText(user_data.getName());
                 change_id.setText(user_data.getCampusID());
                 change_phone.setText(user_data.getPhone());
-                change_password.setText(user_data.getPassword());
-                change_password.setText(user_data.getPassword());
 
                 new AlertDialog.Builder(context).setTitle("修改个人信息")
                         .setView(dialog)
@@ -150,8 +147,6 @@ public class UserFragment extends Fragment implements Observer<Response<User>> {
     }
 
     private void commitChange(String name, String id, String phone, String password) {
-        if (password.isEmpty())
-            password = user_data.getPassword();
         (new APIClient()).subscribeUpdateUser(
                 this, user_data.getApiKey(), user_data.getID(),
                 user_data.getUsername(), password, name, id, phone, user_data.getEmail(),
@@ -171,9 +166,12 @@ public class UserFragment extends Fragment implements Observer<Response<User>> {
             if (user == null) {
                 return;
             }
-            user_name.setText(user.getUsername());
+            user_name.setText(user.getName());
             user_id.setText(user.getCampusID());
             user_phone.setText(user.getPhone());
+            user_data.setName(user.getName());
+            user_data.setCampusID(user.getCampusID());
+            user_data.setPhone(user.getPhone());
         }
     }
     @Override
