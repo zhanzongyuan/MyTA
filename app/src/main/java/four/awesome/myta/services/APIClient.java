@@ -8,6 +8,7 @@ import four.awesome.myta.models.Course;
 import four.awesome.myta.models.User;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
+import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Response;
@@ -79,6 +80,17 @@ public class APIClient {
         @GET("courses")
         Observable<Response<List<Course>>> listCoursesByUserID(@Query("api_key") String apiKey,
                                                                @Query("user_id") int userID);
+        @GET("assignments")
+        Observable<Response<Assignment>> getAssignments(@Query("api_key") String apiKey,
+                                                        @Query("user_id") int assignmentId);
+
+        @FormUrlEncoded
+        @POST("assignments")
+        Observable<Response<Assignment>> createAssignment(@Query("api_key") String apiKey,
+                                                          @Field("course_name") String courseName,
+                                                          @Field("teacher_id") int teacherID,
+                                                          @Field("teacher_name") String teacherName);
+
     }
 
     public APIClient() {
@@ -105,6 +117,21 @@ public class APIClient {
     public void subscribeAuthorize(Observer<Response<User>> observer,
                                    String email, String password) {
         service.authorize(email, password)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+    }
+
+    public void subscribeGetAssign(Observer<Response<Assignment>> observer, String apiKey, int userId) {
+        service.getAssignments(apiKey, userId)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+    }
+
+    public void subscribeCreateAssign(Observer<Response<Assignment>> observer, String apiKey, String courseName,
+                                      int teacherID, String teacherName) {
+        service.createAssignment(apiKey, courseName, teacherID, teacherName)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
@@ -151,7 +178,6 @@ public class APIClient {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
     }
-
 
     public void subscribeAppendCourse(Observer<Response<User>> observer, int courseId,
                                       int userId, String apiKey) {

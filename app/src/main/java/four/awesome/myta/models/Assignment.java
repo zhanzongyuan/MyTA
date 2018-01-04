@@ -20,6 +20,7 @@ public class Assignment implements Serializable {
     private Date startTime;
     private String detail;
     private User creator;
+    private int assignId;
 
     public Assignment() {
         name = "";
@@ -31,13 +32,15 @@ public class Assignment implements Serializable {
         creator.setEmail("123@qq.com");
         creator.setType("teacher");
         creator.setCampusID("12345");
+        assignId = 0;
     }
-    public Assignment(String name, Date startTime, Date endTime, String detail, User creator) {
+    public Assignment(String name, Date startTime, Date endTime, String detail, User creator, int assignId) {
         this.name = name;
         this.endTime = endTime;
         this.startTime = startTime;
         this.detail = detail;
         this.creator = creator;
+        this.assignId = assignId;
     }
     public void setName (String name) {
         this.name = name;
@@ -54,6 +57,7 @@ public class Assignment implements Serializable {
     public void setCreator(User creator) {
         this.creator = creator;
     }
+    public void setAssignId(int assignId) {this.assignId = assignId; }
     public String getName() {
         return name;
     }
@@ -69,4 +73,5 @@ public class Assignment implements Serializable {
     public User getCreator() {
         return creator;
     }
+    public int getAssignId() {return assignId;}
 }
