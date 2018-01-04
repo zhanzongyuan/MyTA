@@ -37,14 +37,14 @@ public class LoginActivity extends AppCompatActivity
 
         initVariables();
 
-//        String username = sharedPreferences.getString("username", null);
-//        if (username != null) {
-//            String apiKey = sharedPreferences.getString("api_key", null);
-//            Intent intent = new Intent(this, MainActivity.class);
-//            intent.putExtra("username", username);
-//            intent.putExtra("api_key", apiKey);
-//            startActivity(intent);
-//        }
+        String username = sharedPreferences.getString("username", null);
+        if (username != null) {
+            String apiKey = sharedPreferences.getString("api_key", null);
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("username", username);
+            intent.putExtra("api_key", apiKey);
+            startActivity(intent);
+        }
 
         buttonRegister.setOnClickListener(this);
         buttonForget.setOnClickListener(this);
