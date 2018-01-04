@@ -46,6 +46,7 @@ public class CourseFragment extends Fragment {
     private String apiKey;
     private int id;
     private String type;
+    private String userName;
 
     private static CourseFragment fragment;
     private View view;
@@ -78,7 +79,7 @@ public class CourseFragment extends Fragment {
                 if (type.equals("teacher"))
                     createCourseDialog();
                 else if (type.equals("student"))
-                    joinCourse();
+                    joinCourseSwitch();
 
             }
         });
@@ -115,7 +116,7 @@ public class CourseFragment extends Fragment {
     }
 
     // When student joins course, show dialog to choose.
-    public void joinCourse() {
+    public void joinCourseSwitch() {
         // Get all course data for student.
 
         if (courseListView.getVisibility() == View.VISIBLE) {
@@ -143,13 +144,14 @@ public class CourseFragment extends Fragment {
     }
 
     // Return new instance of fragment.
-    public static CourseFragment newInstance(String apikey, int id, String type) {
+    public static CourseFragment newInstance(String apikey, int id, String type, String userName) {
         if (fragment == null)
             fragment = new CourseFragment();
 
         fragment.apiKey = apikey;
         fragment.id = id;
         fragment.type = type;
+        fragment.userName = userName;
 
         fragment.importData();
 
@@ -175,6 +177,7 @@ public class CourseFragment extends Fragment {
                     courseList.clear();
                     if (listResponse.body() != null)
                         courseList.addAll(listResponse.body());
+                    courseListAdapter.notifyDataSetChanged();
                 } else if (listResponse.code() == 400) {
                     Toast.makeText(view.getContext(), "无法访问", Toast.LENGTH_SHORT).show();
                 } else {
@@ -248,8 +251,7 @@ public class CourseFragment extends Fragment {
             @Override
             public void onClick(int position) {
                 // TODO：Jump to course detail.
-                Intent intent = new Intent(view.getContext(), CourseInfo.class);
-                startActivityForResult(intent, 0);
+                startCourseInfoActivity(position, false);
             }
 
             @Override
@@ -284,13 +286,7 @@ public class CourseFragment extends Fragment {
                 @Override
                 public void onClick(int position) {
                     // TODO: Jump to detail.
-                    Intent intent = new Intent(view.getContext(), CourseInfo.class);
-                    intent.putExtra("apiKey", apiKey);
-                    intent.putExtra("type", type);
-                    intent.putExtra("courseId", allCourseList.get(position).getId());
-                    intent.putExtra("courseName", allCourseList.get(position).getName());
-
-                    startActivityForResult(intent, 0);
+                    startCourseInfoActivity(position, true);
                 }
 
                 @Override
@@ -309,6 +305,7 @@ public class CourseFragment extends Fragment {
         }
         return false;
     }
+
     // Http request to new course.
     public void createCourseHttpRequest(final String courseName) {
         (new APIClient()).subscribeNewCourse(new Observer<Response<Course>>() {
@@ -320,6 +317,8 @@ public class CourseFragment extends Fragment {
                 System.out.println(""+courseResponse.code());
                 if (courseResponse.code() == 201) {
                     Toast.makeText(view.getContext(), "成功创建", Toast.LENGTH_SHORT).show();
+                    courseList.add(courseResponse.body());
+                    courseListAdapter.notifyDataSetChanged();
                 } else if (courseResponse.code() == 400) {
                     Toast.makeText(view.getContext(), "无法访问", Toast.LENGTH_SHORT).show();
                 } else {
@@ -332,12 +331,31 @@ public class CourseFragment extends Fragment {
 
             @Override
             public void onComplete() {}
-        }, apiKey, courseName, id);
+        }, apiKey, courseName, id, userName);
     }
 
     // Receive result from course info page.
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    // Jump to course info activity.
+    public void startCourseInfoActivity(int position, boolean isAll) {
+        Intent intent = new Intent(view.getContext(), CourseInfo.class);
+        intent.putExtra("apiKey", apiKey);
+        intent.putExtra("type", type);
+        if (isAll) {
+            intent.putExtra("courseId", allCourseList.get(position).getId());
+            intent.putExtra("courseName", allCourseList.get(position).getName());
+            intent.putExtra("teacherName", allCourseList.get(position).getTeacher());
+        }
+        else {
+            intent.putExtra("courseId", courseList.get(position).getId());
+            intent.putExtra("courseName", courseList.get(position).getName());
+            intent.putExtra("teacherName", courseList.get(position).getTeacher());
+        }
+
+        startActivityForResult(intent, 0);
     }
 }

@@ -1,5 +1,7 @@
 package four.awesome.myta.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,15 +12,24 @@ import java.util.List;
 
 public class Course implements Serializable {
     private int id;
-    private String course_name;
-    private String teacher;
+
+    @SerializedName("course_name")
+    private String courseName;
+
+    @SerializedName("teacher_id")
+    private int teacherId;
+
+    @SerializedName("teacher_name")
+    private String teacherName;
+
+
     private List<Assignment> assignmentList;
 
     public Course(int id, String name, String teacher) {
         this.id = id;
         assignmentList = new ArrayList<>();
-        this.course_name = name;
-        this.teacher = teacher;
+        this.courseName = name;
+        this.teacherName = teacher;
     }
 
     public void setId(int id) {
@@ -26,7 +37,7 @@ public class Course implements Serializable {
     }
 
     public void setName(String name) {
-        this.course_name = name;
+        this.courseName = name;
     }
 
     public void setAssignmentList(List<Assignment> assignmentList) {
@@ -34,7 +45,7 @@ public class Course implements Serializable {
     }
 
     public void setTeacher(String teacher) {
-        this.teacher = teacher;
+        this.teacherName = teacher;
     }
 
     public int getId() {
@@ -42,7 +53,7 @@ public class Course implements Serializable {
     }
 
     public String getName() {
-        return course_name;
+        return courseName;
     }
 
     public List<Assignment> getAssignmentList() {
@@ -50,6 +61,7 @@ public class Course implements Serializable {
     }
 
     public String getTeacher() {
-        return teacher;
+        return teacherName;
     }
+
 }
