@@ -36,5 +36,6 @@
     <string name="homework">作业</string>
     <string name="course">课程</string>
     <string name="user_info">我</string>
+    <string name="title_activity_course_info">CourseInfo</string>
 
 </resources>

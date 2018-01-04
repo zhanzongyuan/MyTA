@@ -24,6 +24,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import four.awesome.myta.CourseInfo;
 import four.awesome.myta.MainActivity;
 import four.awesome.myta.R;
 import four.awesome.myta.adapter.MyCourseListAdapter;
@@ -51,8 +52,11 @@ public class CourseFragment extends Fragment {
     private AlertDialog dialog;
 
     MyCourseListAdapter courseListAdapter;
+    MyCourseListAdapter allCourseListAdapter;
     RecyclerView courseListView;
+    RecyclerView allCourseListView;
     List<Course> courseList;
+    List<Course> allCourseList;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,9 +75,9 @@ public class CourseFragment extends Fragment {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (type == "teacher")
+                if (type.equals("teacher"))
                     createCourseDialog();
-                else
+                else if (type.equals("student"))
                     joinCourse();
 
             }
@@ -96,6 +100,10 @@ public class CourseFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // TODO: Create new course.
+                if (courseName.getText().toString().length() == 0) {
+                    Toast.makeText(view.getContext(), "不能为空", Toast.LENGTH_SHORT).show();
+                    dialog.cancel();
+                }
                 createCourseHttpRequest(courseName.getText().toString());
                 dialog.cancel();
             }
@@ -108,6 +116,29 @@ public class CourseFragment extends Fragment {
 
     // When student joins course, show dialog to choose.
     public void joinCourse() {
+        // Get all course data for student.
+
+        if (courseListView.getVisibility() == View.VISIBLE) {
+            loadAllCourse();
+            allCourseListAdapter.notifyDataSetChanged();
+
+            courseListView.setVisibility(View.INVISIBLE);
+            allCourseListView.setVisibility(View.VISIBLE);
+            ((FloatingActionButton) view.findViewById(R.id.floatingButton_add))
+                    .setImageResource(R.drawable.ic_arrow_back_black_24dp);
+            ((FloatingActionButton) view.findViewById(R.id.floatingButton_add))
+                    .setBackgroundColor(getResources().getColor(R.color.colorAccent));
+        }
+        else {
+            courseListView.setVisibility(View.VISIBLE);
+            allCourseListView.setVisibility(View.INVISIBLE);
+            ((FloatingActionButton) view.findViewById(R.id.floatingButton_add))
+                    .setImageResource(R.drawable.ic_add_black_24dp);
+            ((FloatingActionButton) view.findViewById(R.id.floatingButton_add))
+                    .setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+
+        }
+
 
     }
 
@@ -128,7 +159,12 @@ public class CourseFragment extends Fragment {
 
     // Import data from back forward.
     public void importData() {
-        (new APIClient()).subscribeCourse(new Observer<Response<List<Course>>>() {
+        courseList = new ArrayList<>();
+        allCourseList = new ArrayList<>();
+        APIClient apiClient = new APIClient();
+
+        // Add course list of the user.
+        apiClient.subscribeCourse(new Observer<Response<List<Course>>>() {
             @Override
             public void onSubscribe(Disposable d) {}
 
@@ -136,7 +172,9 @@ public class CourseFragment extends Fragment {
             public void onNext(Response<List<Course>> listResponse) {
 
                 if (listResponse.code() == 200) {
-                    courseList = listResponse.body();
+                    courseList.clear();
+                    if (listResponse.body() != null)
+                        courseList.addAll(listResponse.body());
                 } else if (listResponse.code() == 400) {
                     Toast.makeText(view.getContext(), "无法访问", Toast.LENGTH_SHORT).show();
                 } else {
@@ -152,9 +190,46 @@ public class CourseFragment extends Fragment {
             @Override
             public void onComplete() {}
         }, apiKey, id);
-        
     }
 
+    public void loadAllCourse() {
+        if (type.equals("student")) {
+            // Load all course
+            (new APIClient()).subscribeAllCourse(new Observer<Response<List<Course>>>() {
+                @Override
+                public void onSubscribe(Disposable d) {
+                }
+
+                @Override
+                public void onNext(Response<List<Course>> listResponse) {
+                    if (listResponse.code() == 200) {
+                        allCourseList.clear();
+                        if (listResponse.body() != null)
+                            allCourseList.addAll(listResponse.body());
+                        System.out.println(allCourseList.toString());
+                        allCourseListAdapter.notifyDataSetChanged();
+                    } else if (listResponse.code() == 400) {
+                        Toast.makeText(view.getContext(), "无法访问", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(view.getContext(), "未知错误", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    e.printStackTrace();
+                }
+
+                @Override
+                public void onComplete() {
+                }
+            }, apiKey);
+        }
+
+
+    }
+
+    // Initial recyclerView.
     public void initialRecyclerView() {
         // Initial recycler view.
         courseListView = view.findViewById(R.id.reclyerView_course);
@@ -173,6 +248,8 @@ public class CourseFragment extends Fragment {
             @Override
             public void onClick(int position) {
                 // TODO：Jump to course detail.
+                Intent intent = new Intent(view.getContext(), CourseInfo.class);
+                startActivityForResult(intent, 0);
             }
 
             @Override
@@ -183,8 +260,55 @@ public class CourseFragment extends Fragment {
         courseListView.setAdapter(courseListAdapter);
         courseListView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
+
+        // Initial recycler view of all course.
+        if (type.equals("student")) {
+            allCourseListView = (RecyclerView) view.findViewById(R.id.reclyerView_all_course);
+            allCourseListAdapter = new MyCourseListAdapter<Course>(view.getContext(), R.layout.all_course_list_group, allCourseList);
+            allCourseListAdapter.setOnBindDataListener(new MyCourseListAdapter.OnBindDataListener<Course>() {
+                @Override
+                public void onBindData(MyCourseListAdapter.ViewHolder holder, Course d) {
+                    TextView courseNameText = (TextView) holder.getView(R.id.textview_course_name);
+                    TextView teacherNameText = (TextView) holder.getView(R.id.textview_teacher_name);
+
+                    courseNameText.setText(d.getName());
+                    teacherNameText.setText(d.getTeacher());
+
+                    // IsSelected has different text color.
+                    if (isCourseSelected(d)) {
+                        courseNameText.setTextColor(getResources().getColor(R.color.black));
+                    }
+                }
+            });
+            allCourseListAdapter.setOnItemClickListener(new MyCourseListAdapter.OnItemClickListener() {
+                @Override
+                public void onClick(int position) {
+                    // TODO: Jump to detail.
+                    Intent intent = new Intent(view.getContext(), CourseInfo.class);
+                    intent.putExtra("apiKey", apiKey);
+                    intent.putExtra("type", type);
+                    intent.putExtra("courseId", allCourseList.get(position).getId());
+                    intent.putExtra("courseName", allCourseList.get(position).getName());
+
+                    startActivityForResult(intent, 0);
+                }
+
+                @Override
+                public void onLongClick(int position) {
+                }
+            });
+            allCourseListView.setAdapter(allCourseListAdapter);
+            allCourseListView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        }
     }
 
+    // Judge whether course selected.
+    public boolean isCourseSelected(Course d) {
+        for (int i = 0; i < courseList.size(); i++) {
+            if (d.getId() == courseList.get(i).getId()) return true;
+        }
+        return false;
+    }
     // Http request to new course.
     public void createCourseHttpRequest(final String courseName) {
         (new APIClient()).subscribeNewCourse(new Observer<Response<Course>>() {
@@ -209,5 +333,11 @@ public class CourseFragment extends Fragment {
             @Override
             public void onComplete() {}
         }, apiKey, courseName, id);
+    }
+
+    // Receive result from course info page.
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

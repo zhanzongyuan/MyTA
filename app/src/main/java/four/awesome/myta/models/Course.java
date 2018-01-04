@@ -10,14 +10,14 @@ import java.util.List;
 
 public class Course implements Serializable {
     private int id;
-    private String name;
+    private String course_name;
     private String teacher;
     private List<Assignment> assignmentList;
 
     public Course(int id, String name, String teacher) {
         this.id = id;
         assignmentList = new ArrayList<>();
-        this.name = name;
+        this.course_name = name;
         this.teacher = teacher;
     }
 
@@ -26,7 +26,7 @@ public class Course implements Serializable {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.course_name = name;
     }
 
     public void setAssignmentList(List<Assignment> assignmentList) {
@@ -42,7 +42,7 @@ public class Course implements Serializable {
     }
 
     public String getName() {
-        return name;
+        return course_name;
     }
 
     public List<Assignment> getAssignmentList() {

@@ -106,6 +106,13 @@ public class APIClient {
     }
 
 
+    public void subscribeAllCourse(Observer<Response<List<Course>>> observer, String apiKey) {
+        service.listAllCourses(apiKey)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+    }
+
     public void subscribeCourse(Observer<Response<List<Course>>> observer, String apiKey, int id) {
         service.listCoursesByUserID(apiKey, id)
                 .subscribeOn(Schedulers.newThread())

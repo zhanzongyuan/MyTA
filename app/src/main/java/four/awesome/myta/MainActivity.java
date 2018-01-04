@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -119,7 +120,18 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        switch (position) {
+            case 0:
+                getSupportActionBar().setTitle(R.string.course);
+                break;
+            case 1:
+                getSupportActionBar().setTitle(R.string.homework);
+                break;
+            case 2:
+                getSupportActionBar().setTitle(R.string.user_info);
+                break;
 
+        }
     }
 
     @Override

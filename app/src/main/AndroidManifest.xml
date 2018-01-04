@@ -23,9 +23,13 @@
         <activity
             android:name=".RegisterActivity"
             android:noHistory="true"
-            android:windowSoftInputMode="adjustNothing"></activity>
-        <activity android:name=".MainActivity"></activity>
-        <activity android:name=".CourseInfo"></activity>
+            android:windowSoftInputMode="adjustNothing" />
+        <activity android:name=".MainActivity"
+            android:theme="@style/AppTheme2"/>
+        <activity
+            android:name=".CourseInfo"
+            android:label="@string/course"
+            android:theme="@style/AppTheme2"/>
     </application>
 
 </manifest>
