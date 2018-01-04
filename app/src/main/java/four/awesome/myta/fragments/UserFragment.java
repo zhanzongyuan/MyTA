@@ -3,10 +3,10 @@ package four.awesome.myta.fragments;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.LayoutInflaterCompat;
-import android.support.v4.view.ViewGroupCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,13 +18,18 @@ import android.widget.Toast;
 
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import four.awesome.myta.MainActivity;
 import four.awesome.myta.R;
 import four.awesome.myta.models.User;
+import four.awesome.myta.services.APIClient;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import retrofit2.Response;
 
 /**
  * Fragment for user list.
  */
-public class UserFragment extends Fragment {
+public class UserFragment extends Fragment implements Observer<Response<User>> {
     private User user_data;
     
     private CircleImageView user_img;
@@ -100,7 +105,7 @@ public class UserFragment extends Fragment {
                 final EditText change_id = (EditText) dialog.findViewById(R.id.change_id);
                 final EditText change_phone = (EditText) dialog.findViewById(R.id.change_phone);
                 final EditText change_password = (EditText) dialog.findViewById(R.id.change_password);
-                final EditText comfirm_password = (EditText) dialog.findViewById(R.id.comfirm_password);
+                final EditText confirm_password = (EditText) dialog.findViewById(R.id.confirm_password);
 
                 change_name.setText(user_data.getName());
                 change_id.setText(user_data.getCampusID());
@@ -117,28 +122,20 @@ public class UserFragment extends Fragment {
                                 String id =  change_id.getText().toString();
                                 String phone = change_phone.getText().toString();
                                 String password = change_password.getText().toString();
-                                String c_password = comfirm_password.getText().toString();
+                                String c_password = confirm_password.getText().toString();
                                     // TODO: 18-1-3 补充更多的合法性检测
                                 if (name.isEmpty()) {
                                     Toast.makeText(context, "姓名不能为空", Toast.LENGTH_LONG).show();
                                 } else if (id.isEmpty()) {
                                     Toast.makeText(context, "学号不能为空", Toast.LENGTH_LONG).show();
-                                } else if (password.isEmpty()) {
-                                    Toast.makeText(context, "密码不能为空", Toast.LENGTH_LONG).show();
-                                } else if (password.length() < 8 ||
+                                } else if (!password.isEmpty() && (password.length() < 8 ||
                                         password.matches("[0-9]+") ||
-                                        password.matches("[A-Za-z]+")) {
+                                        password.matches("[A-Za-z]+"))) {
                                     Toast.makeText(context, "密码至少为8位，必须是字母和数字的组合", Toast.LENGTH_LONG).show();
                                 } else if (!password.equals(c_password)) {
                                     Toast.makeText(context, "两次输入的密码不一致", Toast.LENGTH_LONG).show();
                                 } else {
-                                    if (commitChange(name, id, phone)) {
-                                        user_name.setText(name);
-                                        user_id.setText(id);
-                                        user_phone.setText(phone);
-                                    } else {
-                                        Log.e("COMMIT FAILED", "Failed to commit User data change!");
-                                    }
+                                    commitChange(name, id, phone, password);
                                 }
                             }
                         })
@@ -152,8 +149,37 @@ public class UserFragment extends Fragment {
         user_data = user;
     }
 
-    private boolean commitChange(String name, String id, String phone) {
-        // TODO: 18-1-3 上传至后端 
-        return false;
+    private void commitChange(String name, String id, String phone, String password) {
+        if (password.isEmpty())
+            password = user_data.getPassword();
+        (new APIClient()).subscribeUpdateUser(
+                this, user_data.getApiKey(), user_data.getID(),
+                user_data.getUsername(), password, name, id, phone, user_data.getEmail(),
+                user_data.getType()
+        );
     }
+
+    /**
+     * Implement Observer<Response<User>>
+     */
+    @Override
+    public void onSubscribe(Disposable d) {}
+    @Override
+    public void onNext(Response<User> res) {
+        if (res.code() == 201) {
+            User user = res.body();
+            if (user == null) {
+                return;
+            }
+            user_name.setText(user.getUsername());
+            user_id.setText(user.getCampusID());
+            user_phone.setText(user.getPhone());
+        }
+    }
+    @Override
+    public void onError(Throwable e) {
+        e.printStackTrace();
+    }
+    @Override
+    public void onComplete() {}
 }
