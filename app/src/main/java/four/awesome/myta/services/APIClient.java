@@ -151,4 +151,13 @@ public class APIClient {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
     }
+
+
+    public void subscribeAppendCourse(Observer<Response<User>> observer, int courseId,
+                                      int userId, String apiKey) {
+        service.appendCourse(courseId, userId, apiKey)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+    }
 }

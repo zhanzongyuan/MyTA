@@ -21,6 +21,10 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +33,7 @@ import four.awesome.myta.MainActivity;
 import four.awesome.myta.R;
 import four.awesome.myta.adapter.MyCourseListAdapter;
 import four.awesome.myta.adapter.RecyclerAdapter;
+import four.awesome.myta.message.MyMessage;
 import four.awesome.myta.models.Assignment;
 import four.awesome.myta.models.Course;
 import four.awesome.myta.models.User;
@@ -61,8 +66,8 @@ public class CourseFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
     }
-
 
     // Initial expandable list view here.
     @Override
@@ -127,16 +132,14 @@ public class CourseFragment extends Fragment {
             allCourseListView.setVisibility(View.VISIBLE);
             ((FloatingActionButton) view.findViewById(R.id.floatingButton_add))
                     .setImageResource(R.drawable.ic_arrow_back_black_24dp);
-            ((FloatingActionButton) view.findViewById(R.id.floatingButton_add))
-                    .setBackgroundColor(getResources().getColor(R.color.colorAccent));
+
+
         }
         else {
             courseListView.setVisibility(View.VISIBLE);
             allCourseListView.setVisibility(View.INVISIBLE);
             ((FloatingActionButton) view.findViewById(R.id.floatingButton_add))
                     .setImageResource(R.drawable.ic_add_black_24dp);
-            ((FloatingActionButton) view.findViewById(R.id.floatingButton_add))
-                    .setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
         }
 
@@ -236,7 +239,8 @@ public class CourseFragment extends Fragment {
     public void initialRecyclerView() {
         // Initial recycler view.
         courseListView = view.findViewById(R.id.reclyerView_course);
-        courseListAdapter = new MyCourseListAdapter<Course>(view.getContext(), R.layout.course_list_group, courseList);
+        courseListAdapter = new MyCourseListAdapter<Course>(view.getContext(),
+                R.layout.course_list_group, courseList);
         courseListAdapter.setOnBindDataListener(new MyCourseListAdapter.OnBindDataListener<Course>() {
             @Override
             public void onBindData(MyCourseListAdapter.ViewHolder holder, Course d) {
@@ -266,7 +270,8 @@ public class CourseFragment extends Fragment {
         // Initial recycler view of all course.
         if (type.equals("student")) {
             allCourseListView = (RecyclerView) view.findViewById(R.id.reclyerView_all_course);
-            allCourseListAdapter = new MyCourseListAdapter<Course>(view.getContext(), R.layout.all_course_list_group, allCourseList);
+            allCourseListAdapter = new MyCourseListAdapter<Course>(view.getContext(),
+                    R.layout.all_course_list_group, allCourseList);
             allCourseListAdapter.setOnBindDataListener(new MyCourseListAdapter.OnBindDataListener<Course>() {
                 @Override
                 public void onBindData(MyCourseListAdapter.ViewHolder holder, Course d) {
@@ -278,7 +283,7 @@ public class CourseFragment extends Fragment {
 
                     // IsSelected has different text color.
                     if (isCourseSelected(d)) {
-                        courseNameText.setTextColor(getResources().getColor(R.color.black));
+                        courseNameText.setTextColor(getResources().getColor(R.color.gray));
                     }
                 }
             });
@@ -345,17 +350,35 @@ public class CourseFragment extends Fragment {
         Intent intent = new Intent(view.getContext(), CourseInfo.class);
         intent.putExtra("apiKey", apiKey);
         intent.putExtra("type", type);
+        intent.putExtra("userId", id);
         if (isAll) {
             intent.putExtra("courseId", allCourseList.get(position).getId());
             intent.putExtra("courseName", allCourseList.get(position).getName());
             intent.putExtra("teacherName", allCourseList.get(position).getTeacher());
+            intent.putExtra("isJoined", isCourseSelected(allCourseList.get(position)));
         }
         else {
             intent.putExtra("courseId", courseList.get(position).getId());
             intent.putExtra("courseName", courseList.get(position).getName());
             intent.putExtra("teacherName", courseList.get(position).getTeacher());
+            intent.putExtra("isJoined", isCourseSelected(courseList.get(position)));
         }
 
         startActivityForResult(intent, 0);
+    }
+
+    // Subscribe for join class event.
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateRecyclerList(MyMessage msg) {
+        if (msg.getMsgStr().equals("join")) {
+            int _id = msg.getMsgInt();
+            for (int i = 0; i < allCourseList.size(); i++) {
+                if (allCourseList.get(i).getId() == _id) {
+                    courseList.add(allCourseList.get(i));
+                    courseListAdapter.notifyDataSetChanged();
+                    allCourseListAdapter.notifyDataSetChanged();
+                }
+            }
+        }
     }
 }
