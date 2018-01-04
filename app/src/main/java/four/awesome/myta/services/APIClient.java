@@ -19,6 +19,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -52,6 +53,18 @@ public class APIClient {
         Observable<Response<User>> appendCourse(@Field("course") int courseID,
                                                 @Path("ID") int userID,
                                                 @Query("api_key") String apiKey);
+
+        @FormUrlEncoded
+        @PUT("users/{ID}")
+        Observable<Response<User>> updateUser(@Query("api_key") String apiKey,
+                                              @Path("ID") int userID,
+                                              @Field("username") String username,
+                                              @Field("password") String password,
+                                              @Field("name") String name,
+                                              @Field("campus_id") String campusID,
+                                              @Field("phone") String phone,
+                                              @Field("email") String email,
+                                              @Field("type") String type);
 
         @FormUrlEncoded
         @POST("courses")
@@ -105,6 +118,15 @@ public class APIClient {
                 .subscribe(observer);
     }
 
+    public void subscribeUpdateUser(Observer<Response<User>> observer, String apiKey,
+                                    int userID, String username, String password, String name,
+                                    String campusID, String phone, String email, String type) {
+        service.updateUser(apiKey, userID, username, password, name, campusID, phone, email, type)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+    }
+
 
     public void subscribeAllCourse(Observer<Response<List<Course>>> observer, String apiKey) {
         service.listAllCourses(apiKey)
@@ -121,7 +143,8 @@ public class APIClient {
     }
 
 
-    public void subscribeNewCourse(Observer<Response<Course>> observer, String apiKey, String courseName, int teacherID) {
+    public void subscribeNewCourse(Observer<Response<Course>> observer, String apiKey,
+                                   String courseName, int teacherID) {
         service.createCourse(apiKey, courseName, teacherID)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
