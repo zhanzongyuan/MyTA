@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="380dp"
+    android:layout_gravity="center"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="创建课程作业"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/black"/>
+
+    <EditText
+        android:id="@+id/editText_assisgnment_name"
+        android:layout_width="220dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:hint="项目名"
+        android:layout_marginTop="20dp"
+        android:padding="5dp"/>
+
+    <EditText
+        android:id="@+id/editText_ddl"
+        android:layout_width="220dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:hint="提交截止时间"
+        android:layout_marginTop="10dp"
+        android:padding="5dp"/>
+
+    <EditText
+        android:id="@+id/editText_assisgnment_detail"
+        android:layout_width="220dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:hint="详情"
+        android:gravity="top"
+        android:padding="5dp"/>
+
+    <Button
+        android:id="@+id/button_release_assisgn"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:background="@color/black"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="20dp"
+        android:text="确认"
+        android:textColor="@color/white"
+        android:textSize="18sp"/>
+
+</LinearLayout>

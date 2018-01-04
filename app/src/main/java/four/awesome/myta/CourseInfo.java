@@ -1,18 +1,27 @@
 package four.awesome.myta;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.Calendar;
 
 import four.awesome.myta.message.MyMessage;
 import four.awesome.myta.models.Course;
@@ -73,15 +82,85 @@ public class CourseInfo extends AppCompatActivity {
         }
     }
 
+    private AlertDialog alertDialog;
     // Initial add assisgment function.
     public void initialReleaseAssisgment() {
         releaseAssisgnmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // TODO : release assisgment
+                showReleaseDialog();
             }
         });
     }
+    public void showReleaseDialog() {
+        View contview = initialDialogView();
+        final EditText asgmName = (EditText) contview.findViewById(R.id.editText_assisgnment_name);
+        final EditText asgmDDL = (EditText) contview.findViewById(R.id.editText_ddl);
+        final EditText asgmDetail = (EditText) contview.findViewById(R.id.editText_assisgnment_detail);
+
+        Button okButton = (Button) contview.findViewById(R.id.button_release_assisgn);
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (asgmName.getText().toString().length() == 0
+                        || asgmDDL.getText().toString().length() == 0
+                        || asgmDetail.getText().toString().length() == 0) {
+                    Toast.makeText(getApplicationContext(), "信息不能为空", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                // TODO: http release assisgnment.
+                alertDialog.cancel();
+            }
+        });
+
+        alertDialog = new AlertDialog.Builder(this).setView(contview).create();
+        alertDialog.show();
+    }
+    private View initialDialogView() {
+        LayoutInflater factory = LayoutInflater.from(this);
+        final View contview = factory.inflate(R.layout.dialog_release_assisgnment, null);
+        final EditText ddlPicker = (EditText) contview.findViewById(R.id.editText_ddl);
+        ddlPicker.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    showDatePicker(contview.getContext(), ddlPicker);
+                    return true;
+                }
+                return false;
+            }
+        });
+        ddlPicker.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    showDatePicker(contview.getContext(), ddlPicker);
+                }
+            }
+        });
+        return contview;
+    }
+    private void showDatePicker(Context context, final EditText ddlPicker) {
+        // Get the date of today.
+        Calendar calendar = Calendar.getInstance();
+        // Show datePicker dialog.
+        final DatePickerDialog datePickerDialog =
+                new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        monthOfYear++;
+                        String monStr = ((monthOfYear < 10) ? ("0" + monthOfYear) : ("" + monthOfYear));
+                        String dayStr = ((dayOfMonth < 10) ? ("0" + dayOfMonth) : ("" + dayOfMonth));
+                        ddlPicker.setText(year + "-" + monStr + "-" + dayStr);
+                    }
+                },
+                        calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.show();
+    }
+
     // Initial add course function.
     public void initialAppendCourse() {
         appendCourseButton.setOnClickListener(new View.OnClickListener() {
@@ -96,7 +175,7 @@ public class CourseInfo extends AppCompatActivity {
                     public void onNext(Response<User> userResponse) {
                         if (userResponse.code() == 201) {
                             Toast.makeText(getApplicationContext(), "选课成功", Toast.LENGTH_SHORT).show();
-                            appendCourseButton.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                            appendCourseButton.setBackgroundColor(getResources().getColor(R.color.gray));
 
                             // Post it is add.
                             EventBus.getDefault().post(new MyMessage("join", course.getId()));
