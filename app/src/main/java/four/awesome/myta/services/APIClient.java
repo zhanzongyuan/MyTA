@@ -70,7 +70,8 @@ public class APIClient {
         @POST("courses")
         Observable<Response<Course>> createCourse(@Query("api_key") String apiKey,
                                                   @Field("course_name") String courseName,
-                                                  @Field("teacher_id") int teacherID);
+                                                  @Field("teacher_id") int teacherID,
+                                                  @Field("teacher_name") String teacherName);
 
         @GET("courses")
         Observable<Response<List<Course>>> listAllCourses(@Query("api_key") String apiKey);
@@ -144,8 +145,8 @@ public class APIClient {
 
 
     public void subscribeNewCourse(Observer<Response<Course>> observer, String apiKey,
-                                   String courseName, int teacherID) {
-        service.createCourse(apiKey, courseName, teacherID)
+                                   String courseName, int teacherID, String teacherName) {
+        service.createCourse(apiKey, courseName, teacherID, teacherName)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);

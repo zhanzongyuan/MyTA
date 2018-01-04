@@ -16,11 +16,12 @@ public class Course implements Serializable {
     @SerializedName("course_name")
     private String courseName;
 
+    @SerializedName("teacher_id")
+    private int teacherId;
+
     @SerializedName("teacher_name")
     private String teacherName;
 
-    @SerializedName("teacher_id")
-    private int teacherId;
 
     private List<Assignment> assignmentList;
 

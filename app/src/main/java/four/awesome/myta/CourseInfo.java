@@ -34,7 +34,7 @@ public class CourseInfo extends AppCompatActivity {
         apiKey = intent.getStringExtra("apiKey");
         type = intent.getStringExtra("type");
         course = new Course(intent.getIntExtra("courseId", -1),
-                intent.getStringExtra("courseName"), "未知");
+                intent.getStringExtra("courseName"), intent.getStringExtra("teacherName"));
     }
     // Initial view.
     public void initialView() {
