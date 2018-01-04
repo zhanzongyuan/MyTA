@@ -10,6 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 
+import java.util.HashSet;
+import java.util.List;
+
 import four.awesome.myta.models.User;
 import four.awesome.myta.services.APIClient;
 import io.reactivex.Observer;
@@ -136,6 +139,7 @@ public class RegisterActivity extends AppCompatActivity
             if (user == null)
                 return;
             makeToast(this, "登录成功");
+            int userID = user.getID();
             String username = user.getUsername();
             String name = user.getName();
             String campusID = user.getCampusID();
@@ -143,8 +147,11 @@ public class RegisterActivity extends AppCompatActivity
             String type = user.getType();
             String email = user.getEmail();
             String apiKey = user.getApiKey();
+            List<String> courses = user.getCourses();
+            List<String> assignments = user.getAssignments();
             SharedPreferences data = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = data.edit();
+            editor.putInt("id", userID);
             editor.putString("username", username);
             editor.putString("name", name);
             editor.putString("campus_id", campusID);
@@ -152,6 +159,8 @@ public class RegisterActivity extends AppCompatActivity
             editor.putString("type", type);
             editor.putString("email", email);
             editor.putString("api_key", apiKey);
+            editor.putStringSet("courses", new HashSet<>(courses));
+            editor.putStringSet("assignments", new HashSet<>(assignments));
             editor.apply();
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             intent.putExtra("user", user);

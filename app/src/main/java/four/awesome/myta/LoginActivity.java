@@ -10,6 +10,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import four.awesome.myta.models.User;
 import four.awesome.myta.services.APIClient;
 import io.reactivex.Observer;
@@ -37,12 +42,37 @@ public class LoginActivity extends AppCompatActivity
 
         initVariables();
 
-        String username = sharedPreferences.getString("username", null);
-        if (username != null) {
+        int id = sharedPreferences.getInt("id", -1);
+        if (id != -1) {
+            String username = sharedPreferences.getString("username", null);
+            String name = sharedPreferences.getString("name", null);
+            String campusID = sharedPreferences.getString("campus_id", null);
+            String phone = sharedPreferences.getString("phone", null);
+            String type = sharedPreferences.getString("type", null);
+            String email = sharedPreferences.getString("email", null);
             String apiKey = sharedPreferences.getString("api_key", null);
+            Set<String> courses = sharedPreferences.getStringSet("courses", null);
+            Set<String> assignments = sharedPreferences.getStringSet(
+                    "assignments", null);
+            User user = new User();
+            user.setID(id);
+            user.setUsername(username);
+            user.setName(name);
+            user.setCampusID(campusID);
+            user.setPhone(phone);
+            user.setType(type);
+            user.setEmail(email);
+            user.setApiKey(apiKey);
+            if (courses == null)
+                user.setCourses(null);
+            else
+                user.setCourses(new ArrayList<>(courses));
+            if (assignments == null)
+                user.setAssignments(null);
+            else
+                user.setAssignments(new ArrayList<>(assignments));
             Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra("username", username);
-            intent.putExtra("api_key", apiKey);
+            intent.putExtra("user", user);
             startActivity(intent);
         }
 
@@ -90,6 +120,7 @@ public class LoginActivity extends AppCompatActivity
             if (user == null)
                 return;
             makeToast(this, "登录成功");
+            int userID = user.getID();
             String username = user.getUsername();
             String name = user.getName();
             String campusID = user.getCampusID();
@@ -97,7 +128,10 @@ public class LoginActivity extends AppCompatActivity
             String type = user.getType();
             String email = user.getEmail();
             String apiKey = user.getApiKey();
+            List<String> courses = user.getCourses();
+            List<String> assignments = user.getAssignments();
             SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt("id", userID);
             editor.putString("username", username);
             editor.putString("name", name);
             editor.putString("campus_id", campusID);
@@ -105,6 +139,8 @@ public class LoginActivity extends AppCompatActivity
             editor.putString("type", type);
             editor.putString("email", email);
             editor.putString("api_key", apiKey);
+            editor.putStringSet("courses", new HashSet<>(courses));
+            editor.putStringSet("assignments", new HashSet<>(assignments));
             editor.apply();
 
             Intent intent = new Intent(this, MainActivity.class);
