@@ -75,28 +75,32 @@ public class AssignmentListFragment extends Fragment {
         assign_list_recyclerView.addItemDecoration(new RvDividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
     }
     private void setData() {
-        User temp_user = new User();
-        temp_user.setName("张涵玮");
-        temp_user.setEmail("123@qq.com");
-        temp_user.setType("teacher");
-        temp_user.setCampusID("12345");
-        final Assignment assignment1 = new Assignment("assign1",
-                new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()),
-                "细节",temp_user);
-        final Assignment assignment2 = new Assignment("assign2",
-                new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()),
-                "细节", temp_user);
-        final Assignment assignment3 = new Assignment("assign3",
-                new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()),
-                "细节", temp_user);
-        ArrayList<Assignment> tempList = new ArrayList<>();
-        tempList.add(assignment1);
-        tempList.add(assignment2);
-        tempList.add(assignment3);
-        datas.add(new SecondaryListAdapter.DataTree<Date, Assignment>(new Date(System.currentTimeMillis()), tempList));
+//        User temp_user = new User();
+//        temp_user.setName("张涵玮");
+//        temp_user.setEmail("123@qq.com");
+//        temp_user.setType("teacher");
+//        temp_user.setCampusID("12345");
+//        final Assignment assignment1 = new Assignment("assign1",
+//                new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()),
+//                "细节",temp_user);
+//        final Assignment assignment2 = new Assignment("assign2",
+//                new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()),
+//                "细节", temp_user);
+//        final Assignment assignment3 = new Assignment("assign3",
+//                new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()),
+//                "细节", temp_user);
+//        ArrayList<Assignment> tempList = new ArrayList<>();
+//        tempList.add(assignment1);
+//        tempList.add(assignment2);
+//        tempList.add(assignment3);
+//        datas.add(new SecondaryListAdapter.DataTree<Date, Assignment>(new Date(System.currentTimeMillis()), tempList));
     }
     // 重新设置某一项assignment
     public void setAssignmentByPositon() {
 
+    }
+    // 添加assignment
+    public void addAssignment(final Assignment assignment) {
+        datas.add(new SecondaryListAdapter.DataTree<Date, Assignment>(assignment.getEndTime(), new ArrayList<Assignment>(){{add(assignment);}}));
     }
 }
