@@ -78,7 +78,7 @@ public class CourseFragment extends Fragment {
                 if (type.equals("teacher"))
                     createCourseDialog();
                 else if (type.equals("student"))
-                    joinCourse();
+                    joinCourseSwitch();
 
             }
         });
@@ -115,7 +115,7 @@ public class CourseFragment extends Fragment {
     }
 
     // When student joins course, show dialog to choose.
-    public void joinCourse() {
+    public void joinCourseSwitch() {
         // Get all course data for student.
 
         if (courseListView.getVisibility() == View.VISIBLE) {
@@ -175,6 +175,7 @@ public class CourseFragment extends Fragment {
                     courseList.clear();
                     if (listResponse.body() != null)
                         courseList.addAll(listResponse.body());
+                    courseListAdapter.notifyDataSetChanged();
                 } else if (listResponse.code() == 400) {
                     Toast.makeText(view.getContext(), "无法访问", Toast.LENGTH_SHORT).show();
                 } else {
@@ -249,6 +250,11 @@ public class CourseFragment extends Fragment {
             public void onClick(int position) {
                 // TODO：Jump to course detail.
                 Intent intent = new Intent(view.getContext(), CourseInfo.class);
+                intent.putExtra("apiKey", apiKey);
+                intent.putExtra("type", type);
+                intent.putExtra("courseId", courseList.get(position).getId());
+                intent.putExtra("courseName", courseList.get(position).getName());
+
                 startActivityForResult(intent, 0);
             }
 
@@ -320,6 +326,8 @@ public class CourseFragment extends Fragment {
                 System.out.println(""+courseResponse.code());
                 if (courseResponse.code() == 201) {
                     Toast.makeText(view.getContext(), "成功创建", Toast.LENGTH_SHORT).show();
+                    courseList.add(courseResponse.body());
+                    courseListAdapter.notifyDataSetChanged();
                 } else if (courseResponse.code() == 400) {
                     Toast.makeText(view.getContext(), "无法访问", Toast.LENGTH_SHORT).show();
                 } else {
