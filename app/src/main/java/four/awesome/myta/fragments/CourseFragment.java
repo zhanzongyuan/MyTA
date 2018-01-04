@@ -68,13 +68,17 @@ public class CourseFragment extends Fragment {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
     }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 
     // Initial expandable list view here.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_course, container, false);
-
 
         // Set add new course button.
         FloatingActionButton addButton = (FloatingActionButton) view.findViewById(R.id.floatingButton_add);
@@ -88,7 +92,6 @@ public class CourseFragment extends Fragment {
 
             }
         });
-
         initialRecyclerView();
 
         return view;
@@ -126,7 +129,6 @@ public class CourseFragment extends Fragment {
 
         if (courseListView.getVisibility() == View.VISIBLE) {
             loadAllCourse();
-            allCourseListAdapter.notifyDataSetChanged();
 
             courseListView.setVisibility(View.INVISIBLE);
             allCourseListView.setVisibility(View.VISIBLE);
@@ -285,6 +287,9 @@ public class CourseFragment extends Fragment {
                     if (isCourseSelected(d)) {
                         courseNameText.setTextColor(getResources().getColor(R.color.gray));
                     }
+                    else {
+                        courseNameText.setTextColor(getResources().getColor(R.color.black));
+                    }
                 }
             });
             allCourseListAdapter.setOnItemClickListener(new MyCourseListAdapter.OnItemClickListener() {
@@ -306,7 +311,9 @@ public class CourseFragment extends Fragment {
     // Judge whether course selected.
     public boolean isCourseSelected(Course d) {
         for (int i = 0; i < courseList.size(); i++) {
-            if (d.getId() == courseList.get(i).getId()) return true;
+            if (d.getId() == courseList.get(i).getId()) {
+                return true;
+            }
         }
         return false;
     }

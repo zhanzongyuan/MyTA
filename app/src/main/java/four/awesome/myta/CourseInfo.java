@@ -97,7 +97,9 @@ public class CourseInfo extends AppCompatActivity {
                         if (userResponse.code() == 201) {
                             Toast.makeText(getApplicationContext(), "选课成功", Toast.LENGTH_SHORT).show();
                             appendCourseButton.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-                            EventBus.getDefault().post(new MyMessage("join", id));
+
+                            // Post it is add.
+                            EventBus.getDefault().post(new MyMessage("join", course.getId()));
                         } else if (userResponse.code() == 400) {
                             Toast.makeText(getApplicationContext(), "无法访问", Toast.LENGTH_SHORT).show();
                         } else {
