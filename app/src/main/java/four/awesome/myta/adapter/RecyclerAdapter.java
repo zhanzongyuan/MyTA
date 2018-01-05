@@ -28,7 +28,7 @@ public class RecyclerAdapter extends SecondaryListAdapter<RecyclerAdapter.GroupI
     public RecyclerAdapter(Context context) {
         this.context = context;
     }
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日");
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日HH时mm分");
     public void addData(DataTree<Date, Assignment> dataTree) {
         for (int i = 0; i < dts.size(); i++) {
             if (dts.get(i).getGroupItem().getYear() == dataTree.getGroupItem().getYear() &&

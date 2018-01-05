@@ -103,7 +103,6 @@ public class CourseInfo extends AppCompatActivity {
         final EditText asgmDDLDate = (EditText) contview.findViewById(R.id.editText_ddl_date);
         final EditText asgmDDLTime = (EditText) contview.findViewById(R.id.editText_ddl_time);
         final EditText asgmDetail = (EditText) contview.findViewById(R.id.editText_assisgnment_detail);
-
         Button okButton = (Button) contview.findViewById(R.id.button_release_assisgn);
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,7 +120,6 @@ public class CourseInfo extends AppCompatActivity {
                 alertDialog.cancel();
             }
         });
-
         alertDialog = new AlertDialog.Builder(this).setView(contview).create();
         alertDialog.show();
     }
@@ -229,16 +227,15 @@ public class CourseInfo extends AppCompatActivity {
         String pTime = getNowStr();
         int courseId = course.getId();
         String courseName = course.getName();
-
         (new APIClient()).subscribeCreateAssign(new Observer<Response<Assignment>>() {
             @Override
             public void onSubscribe(Disposable d) {}
-
             @Override
             public void onNext(Response<Assignment> assignmentResponse) {
                 System.out.println(assignmentResponse.code());
                 if (assignmentResponse.code() == 201) {
                     Toast.makeText(getApplicationContext(), "创建成功", Toast.LENGTH_SHORT).show();
+                    EventBus.getDefault().post(assignmentResponse.body());
                 }
                 else if (assignmentResponse.code() == 400) {
                     Toast.makeText(getApplicationContext(), "创建失败", Toast.LENGTH_SHORT).show();
@@ -254,7 +251,6 @@ public class CourseInfo extends AppCompatActivity {
             @Override
             public void onComplete() {}
         }, apiKey, assName, pTime, eTime, detail, courseId, courseName);
-
         System.out.println(apiKey);
         System.out.println(assName);
         System.out.println(pTime);
@@ -262,7 +258,6 @@ public class CourseInfo extends AppCompatActivity {
         System.out.println(detail);
         System.out.println(courseId);
         System.out.println(courseName);
-
     }
 
 

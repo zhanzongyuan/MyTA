@@ -2,6 +2,7 @@ package four.awesome.myta.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.EventLog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,6 +80,7 @@ public class AssignmentFragment extends Fragment {
 //                    new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()),
 //                    "细节", temp_user);
 //        }
+
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日");
         assign_name.setText(assignment_data.getName());
         assign_start_time.setText(simpleDateFormat.format(assignment_data.getStartTime()));

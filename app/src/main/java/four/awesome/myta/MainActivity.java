@@ -168,7 +168,14 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         Log.d("Eventbus", assignment.getName());
         Intent intent = new Intent(MainActivity.this, AssignActivity.class);
         intent.putExtra("assign", assignment);
-        startActivityForResult(intent, 1);
+        // 后期实现可以修改assign的接口
+        //startActivityForResult(intent, 1);
+        startActivity(intent);
+    }
+    @Subscribe
+    public void onEventMainThread(Assignment assignment) {
+        Log.d("assign", assignment.getName());
+        assignmentListFragment.addAssignment(assignment);
     }
     @Override
     public void onDestroy() {
