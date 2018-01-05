@@ -2,6 +2,7 @@ package four.awesome.myta;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
@@ -197,6 +198,33 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     public void onEventMainThread(Assignment assignment) {
         Log.d("assign", assignment.getName());
         assignmentListFragment.addAssignment(assignment);
+    }
+    @Subscribe
+    public void onEventMainThread(MyMessage myMessage) {
+        Intent intent = this.getIntent();
+        User user = (User) intent.getSerializableExtra("user");
+        (new APIClient()).subscribeGetAssign(new Observer<Response<List<Assignment>>>() {
+            @Override
+            public void onSubscribe(Disposable d) {}
+            @Override
+            public void onNext(Response<List<Assignment>> assignResponse) {
+                if (assignResponse.code() == 200) {
+                    Log.d("success", "获取所有assign成功");
+                    assignmentListFragment.addAllAssignment(assignResponse.body());
+                } else if (assignResponse.code() == 400) {
+                    Log.d("error", "获取所有assign网络失败");
+                } else {
+                    Log.d("error", "获取所有assign其他原因失败");
+                }
+            }
+            @Override
+            public void onError(Throwable e) {
+                Log.d("error", "获取所有assign其他原因失败");
+                e.printStackTrace();
+            }
+            @Override
+            public void onComplete() {}
+        }, user.getApiKey(), user.getID());
     }
     @Override
     public void onDestroy() {

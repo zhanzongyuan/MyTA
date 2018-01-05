@@ -75,7 +75,6 @@ public class LoginActivity extends AppCompatActivity
             intent.putExtra("user", user);
             startActivity(intent);
         }
-
         buttonRegister.setOnClickListener(this);
         buttonForget.setOnClickListener(this);
         buttonLogin.setOnClickListener(this);

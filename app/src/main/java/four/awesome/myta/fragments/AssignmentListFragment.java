@@ -36,9 +36,8 @@ public class AssignmentListFragment extends Fragment {
     private RecyclerAdapter recyclerAdapter;
 
     public static AssignmentListFragment newInstance() {
-        if (fragment == null) {
-            fragment = new AssignmentListFragment();
-        }
+        // 这里这么设置是为了解除注销重新登陆新的用户的时候出现的assign列表没刷新的bug，其实应该处理的是activity之间的跳转
+        fragment = new AssignmentListFragment();
         return fragment;
     }
 
