@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.text.SimpleDateFormat;
 
 import de.hdodenhof.circleimageview.CircleImageView;

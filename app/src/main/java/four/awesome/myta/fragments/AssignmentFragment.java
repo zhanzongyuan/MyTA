@@ -76,9 +76,4 @@ public class AssignmentFragment extends Fragment {
         assign_end_time.setText(simpleDateFormat.format(assignment_data.getEndTime()));
         assign_detail.setText(assignment_data.getDetail());
     }
-    @Override
-    public void onDestroy() {
-        EventBus.getDefault().unregister(this);
-        super.onDestroy();
-    }
 }

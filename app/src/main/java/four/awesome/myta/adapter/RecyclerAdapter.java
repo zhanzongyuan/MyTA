@@ -29,6 +29,7 @@ public class RecyclerAdapter extends SecondaryListAdapter<RecyclerAdapter.GroupI
         this.context = context;
     }
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月");
+    // 同一个月的ddl的放进同一个组
     public void addData(DataTree<Date, Assignment> dataTree) {
         for (int i = 0; i < dts.size(); i++) {
             if (dts.get(i).getGroupItem().getYear() == dataTree.getGroupItem().getYear() &&

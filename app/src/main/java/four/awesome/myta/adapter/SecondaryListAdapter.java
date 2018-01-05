@@ -36,13 +36,21 @@ public abstract class SecondaryListAdapter<GVH, SVH extends RecyclerView.ViewHol
      * @param data New data
      *
      */
-    public void notifyNewData(List data) {
+    public void notifyNewData(List<DataTree<Date, Assignment>> data) {
         Collections.sort(data, new Comparator<DataTree<Date, Assignment>>() {
             @Override
             public int compare(DataTree<Date, Assignment> o1, DataTree<Date, Assignment> o2) {
                 return ((Date) o1.getGroupItem()).compareTo(o2.getGroupItem());
             }
         });
+        for (int i = 0; i < data.size(); i++) {
+            Collections.sort(data.get(i).getSubItems(), new Comparator<Assignment>() {
+                @Override
+                public int compare(Assignment a1, Assignment a2) {
+                    return ((Date) a1.getEndTime()).compareTo(a2.getEndTime());
+                }
+            });
+        }
         setDataTrees(data);
     }
     // 向外暴露设置显示数据的方法
