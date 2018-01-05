@@ -82,6 +82,11 @@
 
         </android.support.constraint.ConstraintLayout>
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview_course_asgm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -94,10 +99,16 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:text="上同一门课的同学："
+            android:text="一起上课的同学："
             android:textColor="@color/black"
             android:textSize="20sp"
             android:layout_margin="10dp"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview_classmate"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:visibility="invisible"/>
 
     </LinearLayout>
 

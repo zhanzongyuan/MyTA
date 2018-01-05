@@ -82,7 +82,7 @@ public class APIClient {
                                                                @Query("user_id") int userID);
         @GET("assignments")
         Observable<Response<List<Assignment>>> getAssignments(@Query("api_key") String apiKey,
-                                                        @Query("user_id") int assignmentId);
+                                                        @Query("user_id") int userId);
 
         @GET("users")
         Observable<Response<List<User>>> getUsers(@Query("api_key") String apiKey,

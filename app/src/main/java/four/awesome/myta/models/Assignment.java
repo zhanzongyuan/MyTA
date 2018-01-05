@@ -2,6 +2,8 @@ package four.awesome.myta.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.greenrobot.eventbus.Subscribe;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -19,8 +21,13 @@ public class Assignment implements Serializable {
     @SerializedName("publish_time")
     private Date startTime;
     private String detail;
+
+    @SerializedName("course_id")
+    private int courseId;
+
     private User creator;
     private int assignId;
+
 
     public Assignment() {
         name = "";
@@ -74,4 +81,8 @@ public class Assignment implements Serializable {
         return creator;
     }
     public int getAssignId() {return assignId;}
+
+    public int getCourseId() {
+        return courseId;
+    }
 }

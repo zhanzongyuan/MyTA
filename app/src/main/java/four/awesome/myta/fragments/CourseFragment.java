@@ -112,6 +112,7 @@ public class CourseFragment extends Fragment {
                 if (courseName.getText().toString().length() == 0) {
                     Toast.makeText(view.getContext(), "不能为空", Toast.LENGTH_SHORT).show();
                     dialog.cancel();
+                    return;
                 }
                 createCourseHttpRequest(courseName.getText().toString());
                 dialog.cancel();

@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,9 +27,11 @@ import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import four.awesome.myta.adapter.MyCourseListAdapter;
 import four.awesome.myta.message.MyMessage;
 import four.awesome.myta.models.Assignment;
 import four.awesome.myta.models.Course;
@@ -84,6 +88,8 @@ public class CourseInfo extends AppCompatActivity {
         if (type.equals("student")) {
             releaseAssisgnmentButton.setVisibility(View.INVISIBLE);
         }
+
+        initialAsgmView();
     }
 
     private AlertDialog alertDialog;
@@ -232,6 +238,7 @@ public class CourseInfo extends AppCompatActivity {
             public void onNext(Response<Assignment> assignmentResponse) {
                 System.out.println(assignmentResponse.code());
                 if (assignmentResponse.code() == 201) {
+                    isJoined = true;
                     Toast.makeText(getApplicationContext(), "创建成功", Toast.LENGTH_SHORT).show();
                     assignmentResponse.body().setCreator(teacher);
                     EventBus.getDefault().post(assignmentResponse.body());
@@ -292,6 +299,7 @@ public class CourseInfo extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (type.equals("teacher") || isJoined) return;
+                isJoined = true;
                 (new APIClient()).subscribeAppendCourse(new Observer<Response<User>>() {
                     @Override
                     public void onSubscribe(Disposable d) {}
@@ -321,6 +329,48 @@ public class CourseInfo extends AppCompatActivity {
         });
     }
 
+    // Initial assisgment list view.
+    public void initialAsgmView() {
+        // Request data.
+        final List<Assignment> assignments = new ArrayList<>();
+        final MyCourseListAdapter myAsgmListAdapter = new MyCourseListAdapter(this,
+                R.layout.normal_list_item, assignments);
+        (new APIClient()).subscribeGetAssign(new Observer<Response<List<Assignment>>>() {
+            @Override
+            public void onSubscribe(Disposable d) {}
+
+            @Override
+            public void onNext(Response<List<Assignment>> listResponse) {
+                if (listResponse.code() == 200) {
+                    for (int i = 0; i < listResponse.body().size(); i++)
+                        if (listResponse.body().get(i).getCourseId() == course.getId())
+                            assignments.add(listResponse.body().get(i));
+                    myAsgmListAdapter.notifyDataSetChanged();
+                } else if (listResponse.code() == 400) {
+                    Toast.makeText(getApplicationContext(), "无法访问", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "未知错误", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {e.printStackTrace();}
+
+            @Override
+            public void onComplete() {}
+        }, apiKey, id);
+        // Initial view.
+        RecyclerView rv = (RecyclerView) findViewById(R.id.recyclerview_course_asgm);
+        myAsgmListAdapter.setOnBindDataListener(new MyCourseListAdapter.OnBindDataListener<Assignment>() {
+            @Override
+            public void onBindData(MyCourseListAdapter.ViewHolder holder, Assignment d) {
+                ((TextView) holder.getView(R.id.name)).setText(d.getName());
+            }
+        });
+        rv.setAdapter(myAsgmListAdapter);
+        rv.setLayoutManager(new LinearLayoutManager(this));
+
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
