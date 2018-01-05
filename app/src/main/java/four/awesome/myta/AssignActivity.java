@@ -28,7 +28,6 @@ public class AssignActivity extends AppCompatActivity {
         Bundle bundle = this.getIntent().getExtras();
         this.assignment = (Assignment) bundle.getSerializable("assignment");
         setView();
-        //Log.d("assignActivity", assignment.getName());
     }
     private void setView() {
         createImg = (CircleImageView) findViewById(R.id.creator_image);

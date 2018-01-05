@@ -105,4 +105,12 @@ public class AssignmentListFragment extends Fragment {
         recyclerAdapter.addData(new SecondaryListAdapter.DataTree<Date, Assignment>(addAssign.getEndTime(), new ArrayList<Assignment>(){{add(addAssign);}}));
         recyclerAdapter.notifyDataSetChanged();
     }
+    // 添加所有assignment
+    public void addAllAssignment(final List<Assignment> list) {
+        for (int i = 0; i < list.size(); i++) {
+            final int pos = i;
+            recyclerAdapter.addData(new SecondaryListAdapter.DataTree<Date, Assignment>(list.get(pos).getEndTime(), new ArrayList<Assignment>(){{add(list.get(pos));}}));
+            recyclerAdapter.notifyDataSetChanged();
+        }
+    }
 }

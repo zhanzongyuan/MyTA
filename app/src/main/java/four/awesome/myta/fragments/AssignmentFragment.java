@@ -70,18 +70,7 @@ public class AssignmentFragment extends Fragment {
 
     //定义相关数据，但和User交接部分未完成
     private void setData() {
-//        if (assignment_data == null) {
-//            User temp_user = new User();
-//            temp_user.setName("张涵玮");
-//            temp_user.setEmail("123@qq.com");
-//            temp_user.setType("teacher");
-//            temp_user.setCampusID("12345");
-//            assignment_data = new Assignment("assign1",
-//                    new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()),
-//                    "细节", temp_user);
-//        }
-
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日HH时mm分");
         assign_name.setText(assignment_data.getName());
         assign_start_time.setText(simpleDateFormat.format(assignment_data.getStartTime()));
         assign_end_time.setText(simpleDateFormat.format(assignment_data.getEndTime()));

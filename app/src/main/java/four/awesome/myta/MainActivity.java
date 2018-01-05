@@ -30,9 +30,14 @@ import four.awesome.myta.fragments.AssignmentFragment;
 import four.awesome.myta.fragments.AssignmentListFragment;
 import four.awesome.myta.fragments.CourseFragment;
 import four.awesome.myta.fragments.UserFragment;
+import four.awesome.myta.message.MyMessage;
 import four.awesome.myta.models.Assignment;
 import four.awesome.myta.models.Course;
 import four.awesome.myta.models.User;
+import four.awesome.myta.services.APIClient;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import retrofit2.Response;
 
 /**
  * Main activity for navigation between three fragment.
@@ -43,9 +48,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private AssignmentFragment assignmentFragment;
     private CourseFragment fragmentCourse;
     private UserFragment fragmentUser;
-
     private SharedPreferences data;
-
     private BottomNavigationView bottomNavigationView;
     private ViewPager viewPager;
 
@@ -70,10 +73,33 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         Intent intent = getIntent();
         User user = (User) intent.getSerializableExtra("user");
         if (user == null) user = new User();
-
         // TODO: Put data to three different fragments.
         fragmentCourse = CourseFragment.newInstance(user.getApiKey(), user.getID(), user.getType(), user.getName());
         assignmentListFragment = AssignmentListFragment.newInstance();
+        (new APIClient()).subscribeGetAssign(new Observer<Response<List<Assignment>>>() {
+            @Override
+            public void onSubscribe(Disposable d) {}
+            @Override
+            public void onNext(Response<List<Assignment>> assignResponse) {
+                if (assignResponse.code() == 200) {
+                    Log.d("success", "获取所有assign成功");
+                    assignmentListFragment.addAllAssignment(assignResponse.body());
+                } else if (assignResponse.code() == 400) {
+                    Log.d("error", "获取所有assign网络失败");
+                } else {
+                    Log.d("error", "获取所有assign其他原因失败");
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d("error", "获取所有assign其他原因失败");
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onComplete() {}
+        }, user.getApiKey(), user.getID());
         assignmentFragment = AssignmentFragment.newInstance();
         fragmentUser = UserFragment.newInstance();
         fragmentUser.setUserData(user);
@@ -88,7 +114,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         viewPager.addOnPageChangeListener(this);
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
         viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
@@ -164,8 +189,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     // 监听eventBus
     @Subscribe
     public void onEventMainThread(Bundle bundle) {
-        //Assignment assignment = (Assignment) bundle.getSerializable("assignment");
-        //Log.d("Eventbus", assignment.getName());
         Intent intent = new Intent(MainActivity.this, AssignActivity.class);
         intent.putExtras(bundle);
         // 后期实现可以修改assign的接口
