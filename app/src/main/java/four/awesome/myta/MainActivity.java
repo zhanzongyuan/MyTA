@@ -90,13 +90,11 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                     Log.d("error", "获取所有assign其他原因失败");
                 }
             }
-
             @Override
             public void onError(Throwable e) {
                 Log.d("error", "获取所有assign其他原因失败");
                 e.printStackTrace();
             }
-
             @Override
             public void onComplete() {}
         }, user.getApiKey(), user.getID());
