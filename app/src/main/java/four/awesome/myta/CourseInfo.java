@@ -3,11 +3,13 @@ package four.awesome.myta;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -17,6 +19,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
@@ -24,6 +27,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.Calendar;
 
 import four.awesome.myta.message.MyMessage;
+import four.awesome.myta.models.Assignment;
 import four.awesome.myta.models.Course;
 import four.awesome.myta.models.User;
 import four.awesome.myta.services.APIClient;
@@ -96,7 +100,8 @@ public class CourseInfo extends AppCompatActivity {
     public void showReleaseDialog() {
         View contview = initialDialogView();
         final EditText asgmName = (EditText) contview.findViewById(R.id.editText_assisgnment_name);
-        final EditText asgmDDL = (EditText) contview.findViewById(R.id.editText_ddl);
+        final EditText asgmDDLDate = (EditText) contview.findViewById(R.id.editText_ddl_date);
+        final EditText asgmDDLTime = (EditText) contview.findViewById(R.id.editText_ddl_time);
         final EditText asgmDetail = (EditText) contview.findViewById(R.id.editText_assisgnment_detail);
 
         Button okButton = (Button) contview.findViewById(R.id.button_release_assisgn);
@@ -104,12 +109,15 @@ public class CourseInfo extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (asgmName.getText().toString().length() == 0
-                        || asgmDDL.getText().toString().length() == 0
+                        || asgmDDLDate.getText().toString().length() == 0
                         || asgmDetail.getText().toString().length() == 0) {
                     Toast.makeText(getApplicationContext(), "信息不能为空", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 // TODO: http release assisgnment.
+                String ddlEndStr = asgmDDLDate.getText().toString() + " " + asgmDDLTime.getText().toString();
+                createAsgmHttpRequest(asgmName.getText().toString(), ddlEndStr, asgmDetail.getText().toString());
+
                 alertDialog.cancel();
             }
         });
@@ -120,28 +128,51 @@ public class CourseInfo extends AppCompatActivity {
     private View initialDialogView() {
         LayoutInflater factory = LayoutInflater.from(this);
         final View contview = factory.inflate(R.layout.dialog_release_assisgnment, null);
-        final EditText ddlPicker = (EditText) contview.findViewById(R.id.editText_ddl);
-        ddlPicker.setOnTouchListener(new View.OnTouchListener() {
+
+        // ddl date
+        final EditText ddlDatePicker = (EditText) contview.findViewById(R.id.editText_ddl_date);
+        ddlDatePicker.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    showDatePicker(contview.getContext(), ddlPicker);
+                    showDatePicker(contview.getContext(), ddlDatePicker);
                     return true;
                 }
                 return false;
             }
         });
-        ddlPicker.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        ddlDatePicker.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    showDatePicker(contview.getContext(), ddlPicker);
+                    showDatePicker(contview.getContext(), ddlDatePicker);
+                }
+            }
+        });
+
+        // ddl time
+        final EditText ddlTimePicker = (EditText) contview.findViewById(R.id.editText_ddl_time);
+        ddlTimePicker.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    showTimePicker(contview.getContext(), ddlTimePicker);
+                    return true;
+                }
+                return false;
+            }
+        });
+        ddlTimePicker.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    showTimePicker(contview.getContext(), ddlTimePicker);
                 }
             }
         });
         return contview;
     }
-    private void showDatePicker(Context context, final EditText ddlPicker) {
+    private void showDatePicker(Context context, final EditText ddlDatePicker) {
         // Get the date of today.
         Calendar calendar = Calendar.getInstance();
         // Show datePicker dialog.
@@ -152,7 +183,7 @@ public class CourseInfo extends AppCompatActivity {
                         monthOfYear++;
                         String monStr = ((monthOfYear < 10) ? ("0" + monthOfYear) : ("" + monthOfYear));
                         String dayStr = ((dayOfMonth < 10) ? ("0" + dayOfMonth) : ("" + dayOfMonth));
-                        ddlPicker.setText(year + "-" + monStr + "-" + dayStr);
+                        ddlDatePicker.setText(year + "-" + monStr + "-" + dayStr);
                     }
                 },
                         calendar.get(Calendar.YEAR),
@@ -160,6 +191,80 @@ public class CourseInfo extends AppCompatActivity {
                         calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
     }
+    private void showTimePicker(Context context, final EditText ddlTimePicker) {
+        // Get the date of today.
+        Calendar calendar = Calendar.getInstance();
+        // Show datePicker dialog.
+        final TimePickerDialog timePickerDialog =
+                new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        String hourStr = ((hourOfDay < 10) ? "0"  : "") + hourOfDay;
+                        String minStr = ((minute < 10) ? "0" : "") + minute;
+                        ddlTimePicker.setText(hourStr + ":" + minStr);
+                    }
+                }, calendar.HOUR_OF_DAY, calendar.MINUTE, true);
+        timePickerDialog.show();
+    }
+
+    // Get date and time string for now.
+    private String getNowStr() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int min = calendar.get(Calendar.MINUTE);
+
+
+        String monStr = ((month < 10) ? "0"  : "") + month;
+        String dayStr = ((day < 10) ? "0" : "") + day;
+        String hourStr = ((hour < 10) ? "0"  : "") + hour;
+        String minStr = ((min < 10) ? "0" : "") + min;
+        return year + "-" + monStr + "-" + dayStr + " " + hourStr + ":" + minStr;
+    }
+
+    // Create assisgnment http request.
+    private void createAsgmHttpRequest(String assName, String eTime, String detail) {
+        String pTime = getNowStr();
+        int courseId = course.getId();
+        String courseName = course.getName();
+
+        (new APIClient()).subscribeCreateAssign(new Observer<Response<Assignment>>() {
+            @Override
+            public void onSubscribe(Disposable d) {}
+
+            @Override
+            public void onNext(Response<Assignment> assignmentResponse) {
+                System.out.println(assignmentResponse.code());
+                if (assignmentResponse.code() == 201) {
+                    Toast.makeText(getApplicationContext(), "创建成功", Toast.LENGTH_SHORT).show();
+                }
+                else if (assignmentResponse.code() == 400) {
+                    Toast.makeText(getApplicationContext(), "创建失败", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "未知错误", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {e.printStackTrace();}
+
+            @Override
+            public void onComplete() {}
+        }, apiKey, assName, pTime, eTime, detail, courseId, courseName);
+
+        System.out.println(apiKey);
+        System.out.println(assName);
+        System.out.println(pTime);
+        System.out.println(eTime);
+        System.out.println(detail);
+        System.out.println(courseId);
+        System.out.println(courseName);
+
+    }
+
 
     // Initial add course function.
     public void initialAppendCourse() {

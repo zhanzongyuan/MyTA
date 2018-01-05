@@ -87,9 +87,12 @@ public class APIClient {
         @FormUrlEncoded
         @POST("assignments")
         Observable<Response<Assignment>> createAssignment(@Query("api_key") String apiKey,
-                                                          @Field("course_name") String courseName,
-                                                          @Field("teacher_id") int teacherID,
-                                                          @Field("teacher_name") String teacherName);
+                                                          @Field("ass_name") String asgmName,
+                                                          @Field("publish_time") String pTime,
+                                                          @Field("end_time") String eTime,
+                                                          @Field("detail") String detail,
+                                                          @Field("course_id") int courseId,
+                                                          @Field("course_name") String courseName);
 
     }
 
@@ -129,9 +132,10 @@ public class APIClient {
                 .subscribe(observer);
     }
 
-    public void subscribeCreateAssign(Observer<Response<Assignment>> observer, String apiKey, String courseName,
-                                      int teacherID, String teacherName) {
-        service.createAssignment(apiKey, courseName, teacherID, teacherName)
+    public void subscribeCreateAssign(Observer<Response<Assignment>> observer, String apiKey,
+                                      String asgName, String pTime, String eTime,
+                                      String detail, int courseId, String courseName) {
+        service.createAssignment(apiKey, asgName, pTime, eTime, detail, courseId, courseName)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
