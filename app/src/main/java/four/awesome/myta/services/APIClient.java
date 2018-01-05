@@ -84,6 +84,11 @@ public class APIClient {
         Observable<Response<Assignment>> getAssignments(@Query("api_key") String apiKey,
                                                         @Query("user_id") int assignmentId);
 
+        @GET("users")
+        Observable<Response<List<User>>> getUsers(@Query("api_key") String apiKey,
+                                               @Query("course_id") int courseId,
+                                               @Query("type") String type);
+
         @FormUrlEncoded
         @POST("assignments")
         Observable<Response<Assignment>> createAssignment(@Query("api_key") String apiKey,
@@ -166,14 +171,18 @@ public class APIClient {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
     }
-
+    public void subscribeGetUsers(Observer<Response<List<User>>> observer, String apiKey, int courseId, String type) {
+        service.getUsers(apiKey, courseId, type)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+    }
     public void subscribeCourse(Observer<Response<List<Course>>> observer, String apiKey, int id) {
         service.listCoursesByUserID(apiKey, id)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
     }
-
 
     public void subscribeNewCourse(Observer<Response<Course>> observer, String apiKey,
                                    String courseName, int teacherID, String teacherName) {

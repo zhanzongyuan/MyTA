@@ -164,10 +164,10 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     // 监听eventBus
     @Subscribe
     public void onEventMainThread(Bundle bundle) {
-        Assignment assignment = (Assignment) bundle.getSerializable("assignment");
-        Log.d("Eventbus", assignment.getName());
+        //Assignment assignment = (Assignment) bundle.getSerializable("assignment");
+        //Log.d("Eventbus", assignment.getName());
         Intent intent = new Intent(MainActivity.this, AssignActivity.class);
-        intent.putExtra("assign", assignment);
+        intent.putExtras(bundle);
         // 后期实现可以修改assign的接口
         //startActivityForResult(intent, 1);
         startActivity(intent);

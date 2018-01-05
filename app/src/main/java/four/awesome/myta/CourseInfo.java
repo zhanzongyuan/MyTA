@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -25,6 +26,7 @@ import android.widget.Toast;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.Calendar;
+import java.util.List;
 
 import four.awesome.myta.message.MyMessage;
 import four.awesome.myta.models.Assignment;
@@ -36,16 +38,14 @@ import io.reactivex.disposables.Disposable;
 import retrofit2.Response;
 
 public class CourseInfo extends AppCompatActivity {
-
-
     private String apiKey;
     private Course course;
     private String type;
     private int id;
     private boolean isJoined;
-
     Button appendCourseButton;
     ImageView releaseAssisgnmentButton;
+    private User teacher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +53,6 @@ public class CourseInfo extends AppCompatActivity {
         setContentView(R.layout.activity_course_info);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-
         importData();
         initialView();
         initialReleaseAssisgment();
@@ -69,6 +68,7 @@ public class CourseInfo extends AppCompatActivity {
         isJoined = intent.getBooleanExtra("isJoined", false);
         course = new Course(intent.getIntExtra("courseId", -1),
                 intent.getStringExtra("courseName"), intent.getStringExtra("teacherName"));
+        getTeacher();
     }
     // Initial view.
     public void initialView() {
@@ -213,8 +213,6 @@ public class CourseInfo extends AppCompatActivity {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int min = calendar.get(Calendar.MINUTE);
-
-
         String monStr = ((month < 10) ? "0"  : "") + month;
         String dayStr = ((day < 10) ? "0" : "") + day;
         String hourStr = ((hour < 10) ? "0"  : "") + hour;
@@ -235,6 +233,7 @@ public class CourseInfo extends AppCompatActivity {
                 System.out.println(assignmentResponse.code());
                 if (assignmentResponse.code() == 201) {
                     Toast.makeText(getApplicationContext(), "创建成功", Toast.LENGTH_SHORT).show();
+                    assignmentResponse.body().setCreator(teacher);
                     EventBus.getDefault().post(assignmentResponse.body());
                 }
                 else if (assignmentResponse.code() == 400) {
@@ -260,6 +259,32 @@ public class CourseInfo extends AppCompatActivity {
         System.out.println(courseName);
     }
 
+    public void getTeacher() {
+        (new APIClient()).subscribeGetUsers(new Observer<Response<List<User>>>() {
+            @Override
+            public void onSubscribe(Disposable d) {}
+
+            @Override
+            public void onNext(Response<List<User>> listResponse) {
+                if (listResponse.code() == 200) {
+                    Log.d("success", "在courseinfo界面获取teacher成功");
+                    teacher = listResponse.body().get(0);
+                } else if (listResponse.code() == 400) {
+                    Log.d("error", "在courseinfo界面获取teacher网络错误");
+                } else {
+                    Log.d("error", "在courseinfo界面获取teacher其他错误");
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+                Log.d("error", "在courseinfo界面获取teacher其他错误");
+            }
+            @Override
+            public void onComplete() {}
+        }, apiKey, course.getId(), "teacher");
+    }
 
     // Initial add course function.
     public void initialAppendCourse() {
@@ -270,13 +295,11 @@ public class CourseInfo extends AppCompatActivity {
                 (new APIClient()).subscribeAppendCourse(new Observer<Response<User>>() {
                     @Override
                     public void onSubscribe(Disposable d) {}
-
                     @Override
                     public void onNext(Response<User> userResponse) {
                         if (userResponse.code() == 201) {
                             Toast.makeText(getApplicationContext(), "选课成功", Toast.LENGTH_SHORT).show();
                             appendCourseButton.setBackgroundColor(getResources().getColor(R.color.gray));
-
                             // Post it is add.
                             EventBus.getDefault().post(new MyMessage("join", course.getId()));
                         } else if (userResponse.code() == 400) {

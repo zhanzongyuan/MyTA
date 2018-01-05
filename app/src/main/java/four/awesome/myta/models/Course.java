@@ -21,8 +21,6 @@ public class Course implements Serializable {
 
     @SerializedName("teacher_name")
     private String teacherName;
-
-
     private List<Assignment> assignmentList;
 
     public Course(int id, String name, String teacher) {

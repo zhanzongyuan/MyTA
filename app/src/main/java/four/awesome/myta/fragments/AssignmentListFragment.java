@@ -100,9 +100,9 @@ public class AssignmentListFragment extends Fragment {
 
     }
     // 添加assignment
-    public void addAssignment(final Assignment assignment) {
+    public void addAssignment(final Assignment addAssign) {
         //datas.add(new SecondaryListAdapter.DataTree<Date, Assignment>(assignment.getEndTime(), new ArrayList<Assignment>(){{add(assignment);}}));
-        recyclerAdapter.addData(new SecondaryListAdapter.DataTree<Date, Assignment>(assignment.getEndTime(), new ArrayList<Assignment>(){{add(assignment);}}));
+        recyclerAdapter.addData(new SecondaryListAdapter.DataTree<Date, Assignment>(addAssign.getEndTime(), new ArrayList<Assignment>(){{add(addAssign);}}));
         recyclerAdapter.notifyDataSetChanged();
     }
 }
