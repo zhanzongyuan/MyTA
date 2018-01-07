@@ -37,7 +37,6 @@ public class AttendanceCheck extends AppCompatActivity implements Observer<Respo
     private TextView att_or_time;
     private TextView rand_code;
     private TextView attendance_string;
-    private boolean if_start_att = false;
     private String user_type;
     private String apiKey;
     private Attendance attendance;
@@ -88,6 +87,7 @@ public class AttendanceCheck extends AppCompatActivity implements Observer<Respo
             start_stop_att.setText("签到");
             att_result.setVisibility(View.INVISIBLE);
             attendance_string.setVisibility(View.INVISIBLE);
+            rand_code.setVisibility(View.INVISIBLE);
             start_stop_att.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
