@@ -34,7 +34,9 @@
             android:name=".CourseInfo"
             android:label="@string/course"
             android:theme="@style/AppThemeStudent"/>
-        <activity android:name=".AttendanceCheck"></activity>
+        <activity
+            android:name=".AttendanceCheck"
+            android:theme="@style/AppThemeStudent"/>
     </application>
 
 </manifest>
