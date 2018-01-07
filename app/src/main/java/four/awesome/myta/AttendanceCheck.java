@@ -4,17 +4,23 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
+import org.xml.sax.helpers.AttributesImpl;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class AttendanceCheck extends AppCompatActivity {
     private Button start_stop_att;
     private ListView att_result;
-    private List<String> att_result_name;
+    private ArrayList<String> att_result_name = new ArrayList<String>();
     private EditText stu_att_input;
     private boolean if_start_att = false;
     private String user_type;
@@ -34,12 +40,18 @@ public class AttendanceCheck extends AppCompatActivity {
         user_type = intent.getStringExtra("type");
         user_id = intent.getIntExtra("userId", -1);
         course_id = intent.getIntExtra("couseId", -1);
+        att_result_name.add("张涵玮");
+        att_result_name.add("张家侨");
     }
 
     private void initialView() {
         start_stop_att = (Button) findViewById(R.id.start_stop_attendance);
         att_result = (ListView) findViewById(R.id.show_att_result);
         LinearLayout stu_att = (LinearLayout) findViewById(R.id.stu_att);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.attendance_result, R.id.att_result_name, att_result_name);
+        att_result.setAdapter(adapter);
+
         if (user_type.equals("student")) {
             start_stop_att.setText("签到");
             att_result.setVisibility(View.INVISIBLE);
