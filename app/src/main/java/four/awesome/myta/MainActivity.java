@@ -52,13 +52,16 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private SharedPreferences data;
     private BottomNavigationView bottomNavigationView;
     private ViewPager viewPager;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        loadIntent();
         setContentView(R.layout.activity_main);
-        EventBus.getDefault().register(this);
+
         initialData();
+        EventBus.getDefault().register(this);
         initialNavigationView();
     }
 
@@ -66,16 +69,25 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         return data;
     }
 
+    public void loadIntent() {
+        Intent intent = getIntent();
+        user = (User) intent.getSerializableExtra("user");
+        if (user == null) user = new User();
+
+        // Change color when different user.
+        if (user.getType().equals("teacher")) {
+            setTheme(R.style.AppThemeTA);
+        }
+
+    }
+
     private void initialData() {
         data = getSharedPreferences("data", MODE_PRIVATE);
         viewPager = (ViewPager) findViewById(R.id.frame_layout);
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
 
-        Intent intent = getIntent();
-        User user = (User) intent.getSerializableExtra("user");
-        if (user == null) user = new User();
-        // TODO: Put data to three different fragments.
         fragmentCourse = CourseFragment.newInstance(user.getApiKey(), user.getID(), user.getType(), user.getName());
+
         assignmentListFragment = AssignmentListFragment.newInstance();
         (new APIClient()).subscribeGetAssign(new Observer<Response<List<Assignment>>>() {
             @Override
@@ -189,6 +201,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     @Subscribe
     public void onEventMainThread(Bundle bundle) {
         Intent intent = new Intent(MainActivity.this, AssignActivity.class);
+        bundle.putString("type", user.getType());
         intent.putExtras(bundle);
         // 后期实现可以修改assign的接口
         //startActivityForResult(intent, 1);

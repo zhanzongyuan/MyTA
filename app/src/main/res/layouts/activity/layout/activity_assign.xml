@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?android:windowBackground"
     tools:context="four.awesome.myta.AssignActivity">
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="@color/gray"
+        android:background="?android:windowBackground"
         tools:context="four.awesome.myta.fragments.AssignmentFragment">
         <LinearLayout
             android:background="@color/white"
@@ -63,8 +64,8 @@
             </LinearLayout>
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/black"></View>
+                android:layout_height="3dp"
+                android:background="?android:windowBackground"></View>
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
@@ -84,8 +85,8 @@
             </LinearLayout>
             <View
                 android:layout_width="match_parent"
-                android:layout_height="3dp"
-                android:background="@color/black"
+                android:layout_height="5dp"
+                android:background="?android:windowBackground"
                 ></View>
             <TextView
                 android:layout_marginLeft="10dp"
