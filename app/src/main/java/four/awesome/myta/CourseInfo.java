@@ -81,7 +81,6 @@ public class CourseInfo extends AppCompatActivity {
         ((TextView) findViewById(R.id.info_course_name)).setText(course.getName());
         ((TextView) findViewById(R.id.infor_course_teacher))
                 .setText("授课人："+course.getTeacher());
-
         appendCourseButton = (Button) findViewById(R.id.button_append_course);
         attendance_button = (Button) findViewById(R.id.attendance_button);
         releaseAssisgnmentButton = (ImageView) findViewById(R.id.icon_release_assisgnment);
@@ -125,7 +124,6 @@ public class CourseInfo extends AppCompatActivity {
                 // TODO: http release assisgnment.
                 String ddlEndStr = asgmDDLDate.getText().toString() + " " + asgmDDLTime.getText().toString();
                 createAsgmHttpRequest(asgmName.getText().toString(), ddlEndStr, asgmDetail.getText().toString());
-
                 alertDialog.cancel();
             }
         });
@@ -192,10 +190,7 @@ public class CourseInfo extends AppCompatActivity {
                         String dayStr = ((dayOfMonth < 10) ? ("0" + dayOfMonth) : ("" + dayOfMonth));
                         ddlDatePicker.setText(year + "-" + monStr + "-" + dayStr);
                     }
-                },
-                        calendar.get(Calendar.YEAR),
-                        calendar.get(Calendar.MONTH),
-                        calendar.get(Calendar.DAY_OF_MONTH));
+                }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
     }
     private void showTimePicker(Context context, final EditText ddlTimePicker) {

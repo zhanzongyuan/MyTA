@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -27,6 +28,7 @@ public class RecyclerAdapter extends SecondaryListAdapter<RecyclerAdapter.GroupI
     private List<DataTree<Date, Assignment>> dts = new ArrayList<>();
     public RecyclerAdapter(Context context) {
         this.context = context;
+        super.context = context;
     }
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月");
     // 同一个月的ddl的放进同一个组
@@ -52,7 +54,6 @@ public class RecyclerAdapter extends SecondaryListAdapter<RecyclerAdapter.GroupI
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.dateitem, parent, false);
         return new GroupItemViewHolder(v);
     }
-
     @Override
     public RecyclerView.ViewHolder subItemViewHolder(ViewGroup parent) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.assignitem, parent, false);
@@ -84,14 +85,14 @@ public class RecyclerAdapter extends SecondaryListAdapter<RecyclerAdapter.GroupI
         bundle.putSerializable("assignment", assignment);
         EventBus.getDefault().post(bundle);
     }
-    @Override
-    public void onGroupItemLongClick(Boolean isExpand, GroupItemViewHolder holder, int groupItemIndex) {
-
-    }
-    @Override
-    public void onSubItemLongClick(SubItemViewHolder holder, int groupItemIndex, int subItemIndex) {
-
-    }
+//    @Override
+//    public void onGroupItemLongClick(Boolean isExpand, GroupItemViewHolder holder, int groupItemIndex) {
+//
+//    }
+//    @Override
+//    public void onSubItemLongClick(SubItemViewHolder holder, int groupItemIndex, int subItemIndex) {
+//        Toast.makeText(this.context, "你好啊", Toast.LENGTH_SHORT).show();
+//    }
 
     public static class GroupItemViewHolder extends RecyclerView.ViewHolder {
         TextView dateText;
@@ -105,13 +106,19 @@ public class RecyclerAdapter extends SecondaryListAdapter<RecyclerAdapter.GroupI
         TextView assignName;
         TextView startTime;
         TextView endTime;
-        TextView detail;
         public SubItemViewHolder(View itemView) {
             super(itemView);
             assignName = (TextView) itemView.findViewById(R.id.assignName);
             startTime = (TextView) itemView.findViewById(R.id.startTime);
             endTime = (TextView) itemView.findViewById(R.id.endTime);
         }
+    }
+    public void setUserType(boolean userType) {
+        if (userType)
+            this.isTeacher = true;
+    }
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
     }
 }
 

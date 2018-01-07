@@ -1,8 +1,13 @@
 package four.awesome.myta.adapter;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,6 +16,10 @@ import java.util.Date;
 import java.util.List;
 
 import four.awesome.myta.models.Assignment;
+import four.awesome.myta.services.APIClient;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import retrofit2.Response;
 
 /**
  * Description: Providing a adapter to implement secondary list base on
@@ -29,7 +38,9 @@ public abstract class SecondaryListAdapter<GVH, SVH extends RecyclerView.ViewHol
         .Adapter<RecyclerView.ViewHolder> {
     private List<Boolean> groupItemStatus = new ArrayList<>();
     private List<DataTree> dataTrees = new ArrayList<>();
-
+    protected boolean isTeacher = false;
+    protected Context context;
+    protected String apiKey;
     /**
      * Set new data for adapter to show. It must be called when set new data.
      *
@@ -121,8 +132,6 @@ public abstract class SecondaryListAdapter<GVH, SVH extends RecyclerView.ViewHol
     // 定义点击事件，抽象函数
     public abstract void onGroupItemClick(Boolean isExpand, GVH holder, int groupItemIndex);
     public abstract void onSubItemClick(SVH holder, int groupItemIndex, int subItemIndex);
-    public abstract void onGroupItemLongClick(Boolean isExpand, GVH holder, int groupItemIndex);
-    public abstract void onSubItemLongClick(SVH holder, int groupItemIndex, int subItemIndex);
 
     @Override
     public final void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
@@ -168,8 +177,42 @@ public abstract class SecondaryListAdapter<GVH, SVH extends RecyclerView.ViewHol
             holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    dataTrees.get(itemStatus.getGroupItemIndex()).removeChildByPosition(itemStatus.getSubItemIndex());
-                    notifyDataSetChanged();
+                    if (isTeacher) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setMessage("确定删除本作业吗?").setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                final Assignment assignment = (Assignment) dataTrees.get(itemStatus.getGroupItemIndex()).getSubItems().get(itemStatus.getSubItemIndex());
+                                (new APIClient()).subscribeDeleteAssign(new Observer<Response<Void>>() {
+                                    @Override
+                                    public void onSubscribe(Disposable d) {}
+                                    @Override
+                                    public void onNext(Response response) {
+                                        if (response.code() == 204) {
+                                            Log.d("delete", "删除assign成功");
+                                            dataTrees.get(itemStatus.getGroupItemIndex()).removeChildByPosition(itemStatus.getSubItemIndex());
+                                            if (dataTrees.get(itemStatus.getGroupItemIndex()).getSubItems().size() == 0) {
+                                                dataTrees.remove(itemStatus.getGroupItemIndex());
+                                            }
+                                            Toast.makeText(context, "删除成功", Toast.LENGTH_SHORT).show();
+                                        } else if (response.code() == 400) {
+                                            Log.d("error", "获取assign网络失败");
+                                        } else {
+                                            Log.d("error", "获取assign其他原因失败1");
+                                        }
+                                    }
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        Log.d("error", "获取assign其他原因失败2");
+                                        e.printStackTrace();
+                                    }
+                                    @Override
+                                    public void onComplete() {}
+                                }, assignment.getAssignId(), apiKey);
+                                notifyDataSetChanged();
+                            }
+                        }).setNegativeButton("取消", null).show();
+                    }
                     return true;
                 }
             });

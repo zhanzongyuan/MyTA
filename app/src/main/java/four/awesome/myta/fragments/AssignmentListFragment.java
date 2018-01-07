@@ -1,6 +1,7 @@
 package four.awesome.myta.fragments;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -34,10 +35,12 @@ public class AssignmentListFragment extends Fragment {
     // 数据
     private List<SecondaryListAdapter.DataTree<Date, Assignment>> datas = new ArrayList<>();
     private RecyclerAdapter recyclerAdapter;
+    private Context context;
 
-    public static AssignmentListFragment newInstance() {
+    public static AssignmentListFragment newInstance(Context context) {
         // 这里这么设置是为了解除注销重新登陆新的用户的时候出现的assign列表没刷新的bug，其实应该处理的是activity之间的跳转
         fragment = new AssignmentListFragment();
+        fragment.setContext(context);
         return fragment;
     }
 
@@ -52,11 +55,16 @@ public class AssignmentListFragment extends Fragment {
         // Inflate the layout for this fragment
         assign_list_view = inflater.inflate(R.layout.fragment_assignment_list, container, false);
         setView();
-        setData();
-        recyclerAdapter = new RecyclerAdapter(getContext());
+        recyclerAdapter = new RecyclerAdapter(this.context);
         recyclerAdapter.setData(datas);
         assign_list_recyclerView.setAdapter(recyclerAdapter);
         return assign_list_view;
+    }
+    public void setType(String type) {
+        if (type.equals("teacher"))
+            recyclerAdapter.setUserType(true);
+        else
+            recyclerAdapter.setUserType(false);
     }
     private void setView() {
         if (assign_list_view == null) {
@@ -66,27 +74,6 @@ public class AssignmentListFragment extends Fragment {
         assign_list_recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         assign_list_recyclerView.setHasFixedSize(true);
         assign_list_recyclerView.addItemDecoration(new RvDividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
-    }
-    private void setData() {
-//        User temp_user = new User();
-//        temp_user.setName("张涵玮");
-//        temp_user.setEmail("123@qq.com");
-//        temp_user.setType("teacher");
-//        temp_user.setCampusID("12345");
-//        final Assignment assignment1 = new Assignment("assign1",
-//                new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()),
-//                "细节",temp_user);
-//        final Assignment assignment2 = new Assignment("assign2",
-//                new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()),
-//                "细节", temp_user);
-//        final Assignment assignment3 = new Assignment("assign3",
-//                new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()),
-//                "细节", temp_user);
-//        ArrayList<Assignment> tempList = new ArrayList<>();
-//        tempList.add(assignment1);
-//        tempList.add(assignment2);
-//        tempList.add(assignment3);
-//        datas.add(new SecondaryListAdapter.DataTree<Date, Assignment>(new Date(System.currentTimeMillis()), tempList));
     }
     // 重新设置某一项assignment
     public void setAssignmentByPositon() {
@@ -99,11 +86,18 @@ public class AssignmentListFragment extends Fragment {
         recyclerAdapter.notifyDataSetChanged();
     }
     // 添加所有assignment
-    public void addAllAssignment(final List<Assignment> list) {
+    public void addAllAssignment(final List<Assignment> list, String userType) {
         for (int i = 0; i < list.size(); i++) {
             final int pos = i;
             recyclerAdapter.addData(new SecondaryListAdapter.DataTree<Date, Assignment>(list.get(pos).getEndTime(), new ArrayList<Assignment>(){{add(list.get(pos));}}));
             recyclerAdapter.notifyDataSetChanged();
         }
+        setType(userType);
+    }
+    public void setContext(Context context) {
+        this.context = context;
+    }
+    public void setApiKey(String apiKey) {
+        recyclerAdapter.setApiKey(apiKey);
     }
 }

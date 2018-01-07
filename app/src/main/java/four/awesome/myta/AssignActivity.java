@@ -20,7 +20,7 @@ public class AssignActivity extends AppCompatActivity {
     private TextView startTime;
     private TextView endTime;
     private TextView assignDetail;
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日HH时mm分");;
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日HH时mm分");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private SharedPreferences data;
     private BottomNavigationView bottomNavigationView;
     private ViewPager viewPager;
-
+    private User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,13 +70,12 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         data = getSharedPreferences("data", MODE_PRIVATE);
         viewPager = (ViewPager) findViewById(R.id.frame_layout);
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
-
         Intent intent = getIntent();
-        User user = (User) intent.getSerializableExtra("user");
+        user = (User) intent.getSerializableExtra("user");
         if (user == null) user = new User();
         // TODO: Put data to three different fragments.
         fragmentCourse = CourseFragment.newInstance(user.getApiKey(), user.getID(), user.getType(), user.getName());
-        assignmentListFragment = AssignmentListFragment.newInstance();
+        assignmentListFragment = AssignmentListFragment.newInstance(this);
         (new APIClient()).subscribeGetAssign(new Observer<Response<List<Assignment>>>() {
             @Override
             public void onSubscribe(Disposable d) {}
@@ -84,7 +83,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             public void onNext(Response<List<Assignment>> assignResponse) {
                 if (assignResponse.code() == 200) {
                     Log.d("success", "获取所有assign成功");
-                    assignmentListFragment.addAllAssignment(assignResponse.body());
+                    assignmentListFragment.addAllAssignment(assignResponse.body(), user.getType());
+                    assignmentListFragment.setApiKey(user.getApiKey());
                 } else if (assignResponse.code() == 400) {
                     Log.d("error", "获取所有assign网络失败");
                 } else {
@@ -126,7 +126,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 }
                 return null;
             }
-
             @Override
             public int getCount() {
                 return 3;
@@ -190,8 +189,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     public void onEventMainThread(Bundle bundle) {
         Intent intent = new Intent(MainActivity.this, AssignActivity.class);
         intent.putExtras(bundle);
-        // 后期实现可以修改assign的接口
-        //startActivityForResult(intent, 1);
         startActivity(intent);
     }
     @Subscribe
@@ -202,7 +199,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     @Subscribe
     public void onEventMainThread(MyMessage myMessage) {
         Intent intent = this.getIntent();
-        User user = (User) intent.getSerializableExtra("user");
         (new APIClient()).subscribeGetAssign(new Observer<Response<List<Assignment>>>() {
             @Override
             public void onSubscribe(Disposable d) {}
@@ -210,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             public void onNext(Response<List<Assignment>> assignResponse) {
                 if (assignResponse.code() == 200) {
                     Log.d("success", "获取所有assign成功");
-                    assignmentListFragment.addAllAssignment(assignResponse.body());
+                    assignmentListFragment.addAllAssignment(assignResponse.body(), user.getType());
                 } else if (assignResponse.code() == 400) {
                     Log.d("error", "获取所有assign网络失败");
                 } else {

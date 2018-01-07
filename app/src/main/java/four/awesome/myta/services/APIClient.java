@@ -2,6 +2,7 @@ package four.awesome.myta.services;
 
 import java.util.Currency;
 import java.util.List;
+import java.util.Vector;
 
 import four.awesome.myta.models.Assignment;
 import four.awesome.myta.models.Course;
@@ -15,6 +16,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -98,6 +100,8 @@ public class APIClient {
                                                           @Field("detail") String detail,
                                                           @Field("course_id") int courseId,
                                                           @Field("course_name") String courseName);
+        @DELETE("assignment")
+        Observable<Response<Void>> deleteAssignment(@Query("ID") int assignId, @Query("api_key") String apiKey);
 
     }
 
@@ -125,6 +129,13 @@ public class APIClient {
     public void subscribeAuthorize(Observer<Response<User>> observer,
                                    String email, String password) {
         service.authorize(email, password)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+    }
+
+    public void subscribeDeleteAssign(Observer<Response<Void>> observer, int assignId, String apiKey) {
+        service.deleteAssignment(assignId, apiKey)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
