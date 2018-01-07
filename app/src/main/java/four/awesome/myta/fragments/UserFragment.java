@@ -41,7 +41,6 @@ public class UserFragment extends Fragment implements Observer<Response<User>> {
     private TextView user_email;
     private TextView user_phone;
     private Button change_user_data;
-    private Button course_data;
     private Button logout;
     private MainActivity main;
     //界面组件对象
@@ -85,7 +84,6 @@ public class UserFragment extends Fragment implements Observer<Response<User>> {
         user_email = (TextView) user_view.findViewById(R.id.user_email);
         user_phone = (TextView) user_view.findViewById(R.id.user_phone);
         change_user_data = (Button) user_view.findViewById(R.id.chang_user_data);
-        course_data = (Button) user_view.findViewById(R.id.course_data);
         logout = (Button) user_view.findViewById(R.id.logout);
 
         if (user_data == null) {
