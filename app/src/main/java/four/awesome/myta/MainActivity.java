@@ -56,14 +56,28 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        loadIntent();
         setContentView(R.layout.activity_main);
-        EventBus.getDefault().register(this);
+
         initialData();
+        EventBus.getDefault().register(this);
         initialNavigationView();
     }
 
     public SharedPreferences getData() {
         return data;
+    }
+
+    public void loadIntent() {
+        Intent intent = getIntent();
+        user = (User) intent.getSerializableExtra("user");
+        if (user == null) user = new User();
+
+        // Change color when different user.
+        if (user.getType().equals("teacher")) {
+            setTheme(R.style.AppThemeTA);
+        }
+
     }
 
     private void initialData() {
@@ -188,6 +202,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     @Subscribe
     public void onEventMainThread(Bundle bundle) {
         Intent intent = new Intent(MainActivity.this, AssignActivity.class);
+        bundle.putString("type", user.getType());
         intent.putExtras(bundle);
         startActivity(intent);
     }

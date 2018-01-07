@@ -24,11 +24,19 @@ public class AssignActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Bundle bundle = this.getIntent().getExtras();
+        String type = bundle.getString("type");
+        // Change theme when different user.
+        if (type.equals("teacher")) {
+            setTheme(R.style.AppThemeTA);
+        }
+
         setContentView(R.layout.activity_assign);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        Bundle bundle = this.getIntent().getExtras();
+
         this.assignment = (Assignment) bundle.getSerializable("assignment");
         setView();
     }

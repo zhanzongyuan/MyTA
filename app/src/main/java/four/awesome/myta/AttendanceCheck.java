@@ -1,6 +1,9 @@
 package four.awesome.myta;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -11,79 +14,180 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.xml.sax.helpers.AttributesImpl;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AttendanceCheck extends AppCompatActivity {
+import four.awesome.myta.models.Attendance;
+import four.awesome.myta.models.User;
+import four.awesome.myta.services.APIClient;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import retrofit2.Response;
+
+public class AttendanceCheck extends AppCompatActivity implements Observer<Response<Attendance>> {
     private Button start_stop_att;
     private ListView att_result;
     private ArrayList<String> att_result_name = new ArrayList<String>();
     private ArrayAdapter<String> adapter;
-    private EditText stu_att_input;
-    private boolean if_start_att = false;
+    private EditText att_input;
+    private TextView att_or_time;
+    private TextView rand_code;
+    private TextView attendance_string;
     private String user_type;
+    private String apiKey;
+    private Attendance attendance;
     private int course_id;
     private int user_id;
+    private Observer<Response<Attendance>> observer;
+    private Context context;
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_attendance_check);
         initialData();
+        setContentView(R.layout.activity_attendance_check);
         initialView();
     }
 
     private void initialData() {
+        initialHandler();
+        context = this;
+        observer = this;
         Intent intent = getIntent();
+        apiKey = intent.getStringExtra("apiKey");
         user_type = intent.getStringExtra("type");
         user_id = intent.getIntExtra("userId", -1);
-        course_id = intent.getIntExtra("couseId", -1);
-        att_result_name.add("张涵玮");
-        att_result_name.add("张家侨");
+        course_id = intent.getIntExtra("courseId", -1);
+
+        // Change theme when different user.
+        if (user_type.equals("teacher")) {
+            setTheme(R.style.AppThemeTA);
+        }
     }
 
     private void initialView() {
+        attendance_string = (TextView) findViewById(R.id.attendance_string);
+        att_input = (EditText) findViewById(R.id.att_input);
+        rand_code = (TextView) findViewById(R.id.show_rand_num);
+        att_or_time = (TextView) findViewById(R.id.att_or_time);
         start_stop_att = (Button) findViewById(R.id.start_stop_attendance);
         att_result = (ListView) findViewById(R.id.show_att_result);
-        LinearLayout stu_att = (LinearLayout) findViewById(R.id.stu_att);
+        final LinearLayout stu_att = (LinearLayout) findViewById(R.id.stu_att);
 
         adapter = new ArrayAdapter<String>(this, R.layout.attendance_result, R.id.att_result_name, att_result_name);
         att_result.setAdapter(adapter);
 
         if (user_type.equals("student")) {
+            att_or_time.setText("签到码:");
             start_stop_att.setText("签到");
             att_result.setVisibility(View.INVISIBLE);
-            stu_att_input = (EditText) findViewById(R.id.stu_att_input);
-
+            attendance_string.setVisibility(View.INVISIBLE);
+            rand_code.setVisibility(View.INVISIBLE);
             start_stop_att.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String input = stu_att_input.getText().toString();
-                    // TODO: 18-1-7 学生发送签到码，学生id和课程ID给后端
+                    String code = att_input.getText().toString();
+                    start_stop_att.setClickable(false);
+                    start_stop_att.setTextColor(getResources().getColor(R.color.gray));
+                    (new APIClient()).subscribeCallAttendance(observer, user_id, code, apiKey);
                 }
             });
 
         } else {
-            stu_att.setVisibility(View.INVISIBLE);
+            att_or_time.setText("时间：");
             start_stop_att.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!if_start_att) {
-                        start_stop_att.setText("结束签到");
-                        if_start_att = true;
-                        // TODO: 18-1-7 老师发送签到需求给后端请求签到码。
+                    System.out.println("OK");
+                    String last = att_input.getText().toString();
+                    if (last.equals("")) {
+                        Toast.makeText(context, "时间不能为空", Toast.LENGTH_LONG).show();
                     } else {
-                        if_start_att = false;
-                        start_stop_att.setText("开始签到");
-                        //结果名单为att_result_name列表
-                        // TODO: 18-1-7 老师结束签到，后端返回仍然未签到同学的名单并写入att_result_name
-                        adapter.notifyDataSetChanged();
+                        start_stop_att.setClickable(false);
+                        start_stop_att.setTextColor(getResources().getColor(R.color.gray));
+                        (new APIClient()).subscribeCreateAttendanceCheck(observer, course_id,  Integer.parseInt(last), apiKey);
+                        createThread(Integer.parseInt(last));
                     }
                 }
             });
         }
     }
+
+    private void initialHandler() {
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                switch (msg.what) {
+                    case 123:
+                        // TODO: 18-1-7 请后端修改获取签到对象的接口 
+                        //(new APIClient()).subscribeGetAttendanceCode(observer, course_id, attendance.getId(), apiKey);
+                        start_stop_att.setClickable(true);
+                        start_stop_att.setTextColor(getResources().getColor(R.color.black));
+                        break;
+                    case 111:
+                        att_result_name.add("张家侨");
+                }
+                adapter.notifyDataSetChanged();
+            }
+        };
+    }
+
+    private void createThread(int last) {
+        final int milliLast = last * 1000;
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                long time = System.currentTimeMillis();
+                while(System.currentTimeMillis() - time <= milliLast) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    handler.obtainMessage(111).sendToTarget();
+                }
+                handler.obtainMessage(123).sendToTarget();
+            }
+        };
+        thread.start();
+    }
+
+    @Override
+    public void onSubscribe(Disposable d) {}
+
+    @Override
+    public void onNext(Response<Attendance> res) {
+        System.out.println("res code = " + res.code());
+        if (res.code() == 201) {
+            if (user_type.equals("teacher")) {
+                attendance = res.body();
+                if (attendance == null) {
+                    return;
+                }
+                rand_code.setText(attendance.getCode());
+            } else {
+                Toast.makeText(context, "签到成功", Toast.LENGTH_LONG).show();
+            }
+        } else if (res.code() == 200) {
+            adapter.notifyDataSetChanged();
+        } else {
+            if (user_type.equals("teacher")) {
+                Toast.makeText(context, "发起签到失败", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(context, "签到失败", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+    @Override
+    public void onError(Throwable e) {
+        e.printStackTrace();
+    }
+    @Override
+    public void onComplete() {}
 }

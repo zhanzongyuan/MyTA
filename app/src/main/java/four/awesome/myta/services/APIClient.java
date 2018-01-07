@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Vector;
 
 import four.awesome.myta.models.Assignment;
+import four.awesome.myta.models.Attendance;
 import four.awesome.myta.models.Course;
 import four.awesome.myta.models.User;
 import io.reactivex.Observable;
@@ -102,6 +103,23 @@ public class APIClient {
                                                           @Field("course_name") String courseName);
         @DELETE("assignment")
         Observable<Response<Void>> deleteAssignment(@Query("ID") int assignId, @Query("api_key") String apiKey);
+
+        @FormUrlEncoded
+        @POST("rollcalls")
+        Observable<Response<Attendance>> createAttendance(@Query("api_key") String apiKey,
+                                                          @Field("course_id") int courseId,
+                                                          @Field("last") int last);
+
+        @GET
+        Observable<Response<Attendance>> getAttendanceCode(@Query("api_key") String apiKey,
+                                                           @Query("course_id") int courseId,
+                                                           @Query("attendance_id") int attendanceId);
+
+        @FormUrlEncoded
+        @PATCH
+        Observable<Response<Attendance>> callAttendance(@Query("api_key") String apiKey,
+                                                        @Field("user_id") int userId,
+                                                        @Field("code") String code);
 
     }
 
@@ -209,5 +227,30 @@ public class APIClient {
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
+    }
+
+    public void subscribeCreateAttendanceCheck(Observer<Response<Attendance>> observer, int courseId,
+                                            int last, String apiKey) {
+        service.createAttendance(apiKey, courseId, last)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+    }
+
+    public void subscribeGetAttendanceCode(Observer<Response<Attendance>> observer, int courseId,
+                                           int attendanceId, String apiKey) {
+        service.getAttendanceCode(apiKey, courseId, attendanceId)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+    }
+
+    public void subscribeCallAttendance(Observer<Response<Attendance>> observer,
+                                        int userId, String code, String apiKey) {
+        service.callAttendance(apiKey, userId, code)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+        // TODO: 18-1-8 有bug，"java.lang.IllegalArgumentException: Missing either @PATCH URL or @Url parameter."
     }
 }
