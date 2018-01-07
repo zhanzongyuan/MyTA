@@ -4,6 +4,7 @@ import java.util.Currency;
 import java.util.List;
 
 import four.awesome.myta.models.Assignment;
+import four.awesome.myta.models.Attendance;
 import four.awesome.myta.models.Course;
 import four.awesome.myta.models.User;
 import io.reactivex.Observable;
@@ -98,6 +99,23 @@ public class APIClient {
                                                           @Field("detail") String detail,
                                                           @Field("course_id") int courseId,
                                                           @Field("course_name") String courseName);
+
+        @FormUrlEncoded
+        @POST("rollcalls")
+        Observable<Response<Attendance>> createAttendance(@Query("api_key") String apiKey,
+                                                          @Field("course_id") int courseId,
+                                                          @Field("last") int last);
+
+        @GET
+        Observable<Response<Attendance>> getAttendanceCode(@Query("api_key") String apiKey,
+                                                           @Query("course_id") int courseId,
+                                                           @Query("attendance_id") int attendanceId);
+
+        @FormUrlEncoded
+        @PATCH
+        Observable<Response<Attendance>> callAttendance(@Query("api_key") String apiKey,
+                                                        @Field("user_id") int userId,
+                                                        @Field("code") String code);
 
     }
 
@@ -195,6 +213,30 @@ public class APIClient {
     public void subscribeAppendCourse(Observer<Response<User>> observer, int courseId,
                                       int userId, String apiKey) {
         service.appendCourse(courseId, userId, apiKey)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+    }
+
+    public void subscribeCreateAttendanceCheck(Observer<Response<Attendance>> observer, int courseId,
+                                            int last, String apiKey) {
+        service.createAttendance(apiKey, courseId, last)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+    }
+
+    public void subscribeGetAttendanceCode(Observer<Response<Attendance>> observer, int courseId,
+                                           int attendanceId, String apiKey) {
+        service.getAttendanceCode(apiKey, courseId, attendanceId)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+    }
+
+    public void subscribeCallAttendance(Observer<Response<Attendance>> observer,
+                                        int userId, String code, String apiKey) {
+        service.callAttendance(apiKey, userId, code)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);

@@ -392,6 +392,8 @@ public class CourseInfo extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, AttendanceCheck.class);
+                System.out.println("apiKey = " + apiKey);
+                intent.putExtra("apiKey", apiKey);
                 intent.putExtra("courseId", course.getId());
                 intent.putExtra("userId", id);
                 intent.putExtra("type", type);
