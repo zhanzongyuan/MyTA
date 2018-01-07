@@ -63,8 +63,6 @@ public class AttendanceCheck extends AppCompatActivity implements Observer<Respo
         user_type = intent.getStringExtra("type");
         user_id = intent.getIntExtra("userId", -1);
         course_id = intent.getIntExtra("courseId", -1);
-        att_result_name.add("张涵玮");
-        att_result_name.add("张家侨");
 
         // Change theme when different user.
         if (user_type.equals("teacher")) {
@@ -90,9 +88,10 @@ public class AttendanceCheck extends AppCompatActivity implements Observer<Respo
             start_stop_att.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String input = att_input.getText().toString();
+                    String code = att_input.getText().toString();
                     start_stop_att.setClickable(false);
                     start_stop_att.setTextColor(getResources().getColor(R.color.gray));
+                    (new APIClient()).subscribeCallAttendance(observer, user_id, code, apiKey);
                 }
             });
 
@@ -124,13 +123,14 @@ public class AttendanceCheck extends AppCompatActivity implements Observer<Respo
                 switch (msg.what) {
                     case 123:
                         // TODO: 18-1-7 请后端修改获取签到对象的接口 
-                        (new APIClient()).subscribeGetAttendanceCode(observer, course_id, attendance.getId(), apiKey);
+                        //(new APIClient()).subscribeGetAttendanceCode(observer, course_id, attendance.getId(), apiKey);
                         start_stop_att.setClickable(true);
                         start_stop_att.setTextColor(getResources().getColor(R.color.black));
                         break;
                     case 111:
-                        System.out.println("Thread renew!");
+                        att_result_name.add("张家侨");
                 }
+                adapter.notifyDataSetChanged();
             }
         };
     }
@@ -168,9 +168,17 @@ public class AttendanceCheck extends AppCompatActivity implements Observer<Respo
                     return;
                 }
                 rand_code.setText(attendance.getCode());
+            } else {
+                Toast.makeText(context, "签到成功", Toast.LENGTH_LONG).show();
             }
         } else if (res.code() == 200) {
             adapter.notifyDataSetChanged();
+        } else {
+            if (user_type.equals("teacher")) {
+                Toast.makeText(context, "发起签到失败", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(context, "签到失败", Toast.LENGTH_LONG).show();
+            }
         }
     }
     @Override
