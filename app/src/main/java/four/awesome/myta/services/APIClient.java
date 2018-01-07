@@ -240,5 +240,6 @@ public class APIClient {
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
+        // TODO: 18-1-8 有bug，"java.lang.IllegalArgumentException: Missing either @PATCH URL or @Url parameter."
     }
 }
