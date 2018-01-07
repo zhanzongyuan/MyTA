@@ -49,8 +49,8 @@ public class AttendanceCheck extends AppCompatActivity implements Observer<Respo
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_attendance_check);
         initialData();
+        setContentView(R.layout.activity_attendance_check);
         initialView();
     }
 
@@ -65,6 +65,11 @@ public class AttendanceCheck extends AppCompatActivity implements Observer<Respo
         course_id = intent.getIntExtra("courseId", -1);
         att_result_name.add("张涵玮");
         att_result_name.add("张家侨");
+
+        // Change theme when different user.
+        if (user_type.equals("teacher")) {
+            setTheme(R.style.AppThemeTA);
+        }
     }
 
     private void initialView() {

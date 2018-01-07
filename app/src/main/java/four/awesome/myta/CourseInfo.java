@@ -55,10 +55,10 @@ public class CourseInfo extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        importData();
         setContentView(R.layout.activity_course_info);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        importData();
         initialView();
         initialReleaseAssisgment();
         initialAppendCourse();
@@ -74,6 +74,11 @@ public class CourseInfo extends AppCompatActivity {
         isJoined = intent.getBooleanExtra("isJoined", false);
         course = new Course(intent.getIntExtra("courseId", -1),
                 intent.getStringExtra("courseName"), intent.getStringExtra("teacherName"));
+
+        // Change theme when different user.
+        if (type.equals("teacher")) {
+            setTheme(R.style.AppThemeTA);
+        }
         getTeacher();
     }
     // Initial view.
