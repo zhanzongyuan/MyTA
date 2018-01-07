@@ -48,6 +48,7 @@ public class CourseInfo extends AppCompatActivity {
     private int id;
     private boolean isJoined;
     Button appendCourseButton;
+    Button attendance_button;
     ImageView releaseAssisgnmentButton;
     private User teacher;
 
@@ -61,6 +62,7 @@ public class CourseInfo extends AppCompatActivity {
         initialView();
         initialReleaseAssisgment();
         initialAppendCourse();
+        initialAttendanceButton();
     }
 
     // Import data from parent activiy
@@ -81,6 +83,7 @@ public class CourseInfo extends AppCompatActivity {
                 .setText("授课人："+course.getTeacher());
 
         appendCourseButton = (Button) findViewById(R.id.button_append_course);
+        attendance_button = (Button) findViewById(R.id.attendance_button);
         releaseAssisgnmentButton = (ImageView) findViewById(R.id.icon_release_assisgnment);
         if (type.equals("teacher") || isJoined) {
             appendCourseButton.setBackgroundColor(getResources().getColor(R.color.gray));
@@ -382,4 +385,18 @@ public class CourseInfo extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    //initial attendance button.
+    private void initialAttendanceButton() {
+        final Context context = this;
+        attendance_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, AttendanceCheck.class);
+                intent.putExtra("courseId", course.getId());
+                intent.putExtra("userId", id);
+                intent.putExtra("type", type);
+                startActivity(intent);
+            }
+        });
+    }
 }
