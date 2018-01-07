@@ -21,6 +21,7 @@ public class AttendanceCheck extends AppCompatActivity {
     private Button start_stop_att;
     private ListView att_result;
     private ArrayList<String> att_result_name = new ArrayList<String>();
+    private ArrayAdapter<String> adapter;
     private EditText stu_att_input;
     private boolean if_start_att = false;
     private String user_type;
@@ -54,7 +55,7 @@ public class AttendanceCheck extends AppCompatActivity {
         att_result = (ListView) findViewById(R.id.show_att_result);
         LinearLayout stu_att = (LinearLayout) findViewById(R.id.stu_att);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.attendance_result, R.id.att_result_name, att_result_name);
+        adapter = new ArrayAdapter<String>(this, R.layout.attendance_result, R.id.att_result_name, att_result_name);
         att_result.setAdapter(adapter);
 
         if (user_type.equals("student")) {
@@ -82,8 +83,9 @@ public class AttendanceCheck extends AppCompatActivity {
                     } else {
                         if_start_att = false;
                         start_stop_att.setText("开始签到");
-                        //结果名单为att_resutl_name列表
-                        // TODO: 18-1-7 老师结束签到，后端返回仍然未签到同学的名单
+                        //结果名单为att_result_name列表
+                        // TODO: 18-1-7 老师结束签到，后端返回仍然未签到同学的名单并写入att_result_name
+                        adapter.notifyDataSetChanged();
                     }
                 }
             });
