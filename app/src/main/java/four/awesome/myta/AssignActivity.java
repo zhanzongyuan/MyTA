@@ -1,8 +1,10 @@
 package four.awesome.myta;
 
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -23,6 +25,9 @@ public class AssignActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assign);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         Bundle bundle = this.getIntent().getExtras();
         this.assignment = (Assignment) bundle.getSerializable("assignment");
         setView();
@@ -40,5 +45,16 @@ public class AssignActivity extends AppCompatActivity {
         startTime.setText(formatter.format(assignment.getStartTime()));
         endTime.setText(formatter.format(assignment.getEndTime()));
         assignDetail.setText(assignment.getDetail());
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish(); // back button
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

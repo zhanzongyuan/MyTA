@@ -12,13 +12,6 @@
         android:orientation="vertical"
         android:background="@color/gray"
         tools:context="four.awesome.myta.fragments.AssignmentFragment">
-        <TextView
-            android:background="@color/white"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="作业详情"
-            android:layout_marginTop="10dp"
-            android:textAlignment="center"/>
         <LinearLayout
             android:background="@color/white"
             android:layout_width="match_parent"

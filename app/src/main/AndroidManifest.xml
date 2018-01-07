@@ -24,14 +24,15 @@
             android:name=".RegisterActivity"
             android:noHistory="true"
             android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".MainActivity"
-            android:theme="@style/AppTheme2" />
-        <activity android:name=".AssignActivity" />
+        <activity android:name=".MainActivity"
+            android:theme="@style/AppTheme2"/>
+        <activity android:name=".AssignActivity"
+            android:theme="@style/AppTheme2"
+            android:label="作业详情"/>
         <activity
             android:name=".CourseInfo"
             android:label="@string/course"
-            android:theme="@style/AppTheme2" />
+            android:theme="@style/AppTheme2"/>
         <activity android:name=".AttendanceCheck"></activity>
     </application>
 
