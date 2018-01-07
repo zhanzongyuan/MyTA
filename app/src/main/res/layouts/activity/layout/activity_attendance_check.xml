@@ -49,6 +49,14 @@
         android:textColor="@color/black"
         android:text="XXXX"/>
 
+    <TextView
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="签到情况："
+        android:textSize="15dp"
+        android:textColor="@color/black"/>
+
     <ListView
         android:layout_marginTop="20dp"
         android:id="@+id/show_att_result"
