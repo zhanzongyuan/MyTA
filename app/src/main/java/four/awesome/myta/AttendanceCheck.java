@@ -20,8 +20,10 @@ import android.widget.Toast;
 import org.xml.sax.helpers.AttributesImpl;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import four.awesome.myta.models.Attendance;
 import four.awesome.myta.models.User;
@@ -36,7 +38,11 @@ public class AttendanceCheck extends AppCompatActivity implements Observer<Respo
     private ArrayList<Integer> att_result_id = new ArrayList<Integer>();
     private ArrayList<String> att_result_name = new ArrayList<String>();
     private List<User> stu_list = new LinkedList<User>();
-    private ArrayAdapter<String> adapter;
+    //private ArrayAdapter<String> adapter;
+
+    private SimpleAdapter simpleAdapter;
+    private List<Map<String, Object>> data = new ArrayList<>();
+
     private EditText att_input;
     private TextView att_or_time;
     private TextView rand_code;
@@ -102,8 +108,15 @@ public class AttendanceCheck extends AppCompatActivity implements Observer<Respo
         att_result = (ListView) findViewById(R.id.show_att_result);
         final LinearLayout stu_att = (LinearLayout) findViewById(R.id.stu_att);
 
-        adapter = new ArrayAdapter<String>(this, R.layout.attendance_result, R.id.att_result_name, att_result_name);
-        att_result.setAdapter(adapter);
+        Map<String, Object> temp = new LinkedHashMap<>();
+        temp.put("name", "姓名");
+        temp.put("state", "状态");
+        data.add(temp);
+
+        simpleAdapter = new SimpleAdapter(this, data, R.layout.attendance_result, new String[] {"name", "state"}, new int[] {R.id.att_result_name, R.id.state});
+
+        //adapter = new ArrayAdapter<String>(this, R.layout.attendance_result, R.id.att_result_name, att_result_name);
+        att_result.setAdapter(simpleAdapter);
 
         if (user_type.equals("student")) {
             att_or_time.setText("签到码:");
@@ -128,8 +141,9 @@ public class AttendanceCheck extends AppCompatActivity implements Observer<Respo
                 public void onClick(View v) {
                     System.out.println("OK");
                     String last = att_input.getText().toString();
-                    if (last.equals("")) {
-                        Toast.makeText(context, "时间不能为空", Toast.LENGTH_LONG).show();
+                    int last_i = Integer.parseInt(last);
+                    if (last.equals("") || last_i == 0) {
+                        Toast.makeText(context, "时间不能为空或0", Toast.LENGTH_LONG).show();
                     } else {
                         start_stop_att.setClickable(false);
                         start_stop_att.setTextColor(getResources().getColor(R.color.gray));
@@ -151,10 +165,6 @@ public class AttendanceCheck extends AppCompatActivity implements Observer<Respo
                 switch (msg.what) {
                     case 123:
                         (new APIClient()).subscribeGetAttendanceCode(observer, course_id, attendance.getId(), apiKey);
-                        start_stop_att.setClickable(true);
-                        start_stop_att.setTextColor(getResources().getColor(R.color.black));
-                        att_input.setFocusable(true);
-                        att_input.setEnabled(true);
                         break;
                     case 111:
                         String time = att_input.getText().toString();
@@ -162,7 +172,6 @@ public class AttendanceCheck extends AppCompatActivity implements Observer<Respo
                         time_i = time_i - 1;
                         att_input.setText("" + time_i);
                 }
-                adapter.notifyDataSetChanged();
             }
         };
     }
@@ -188,13 +197,23 @@ public class AttendanceCheck extends AppCompatActivity implements Observer<Respo
     }
 
     private void addStudentNameToAdapter() {
-        for (int i = 0; i < att_result_id.size(); i++) {
-            for (int j = 0; j < stu_list.size(); j++) {
-                if (att_result_id.get(i) == stu_list.get(j).getID()) {
-                    att_result_name.add(stu_list.get(j).getName());
+        for (int i = 0; i < stu_list.size(); i++) {
+            boolean flag = true;
+            Map<String, Object> temp = new LinkedHashMap<>();
+            for (int j = 0; j < att_result_id.size(); j++) {
+                if (att_result_id.get(j) == stu_list.get(i).getID()) {
+                    att_result_name.add(stu_list.get(i).getName());
+                    temp.put("name", stu_list.get(i).getName());
+                    temp.put("state", "已签到");
+                    flag = false;
                     break;
                 }
             }
+            if (flag) {
+                temp.put("name", stu_list.get(i).getName());
+                temp.put("state", "未签到");
+            }
+            data.add(temp);
         }
     }
 
@@ -222,7 +241,7 @@ public class AttendanceCheck extends AppCompatActivity implements Observer<Respo
             att_result_id.addAll(attendance.getStudentList());
             addStudentNameToAdapter();
             System.out.println("id size = " + att_result_id.size());
-            adapter.notifyDataSetChanged();
+            simpleAdapter.notifyDataSetChanged();
         } else {
             if (user_type.equals("teacher")) {
                 Toast.makeText(context, "发起签到失败", Toast.LENGTH_LONG).show();
