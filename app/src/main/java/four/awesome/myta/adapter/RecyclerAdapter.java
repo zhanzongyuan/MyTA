@@ -45,6 +45,9 @@ public class RecyclerAdapter extends SecondaryListAdapter<RecyclerAdapter.GroupI
         dts.add(dataTree);
         notifyNewData(dts);
     }
+    public void removeAll() {
+        dts.clear();
+    }
     public void setData(List datas) {
         dts = datas;
         notifyNewData(dts);

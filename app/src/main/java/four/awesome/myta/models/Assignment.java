@@ -21,13 +21,12 @@ public class Assignment implements Serializable {
     @SerializedName("publish_time")
     private Date startTime;
     private String detail;
-
     @SerializedName("course_id")
     private int courseId;
-
     private User creator;
     @SerializedName("id")
     private int assignId;
+    private int teacherId;
     public Assignment(String name, Date startTime, Date endTime, String detail, User creator, int assignId) {
         this.name = name;
         this.endTime = endTime;
@@ -68,7 +67,9 @@ public class Assignment implements Serializable {
         return creator;
     }
     public int getAssignId() {return assignId;}
-
+    public void setTeacherId(int teacherId) {
+        this.teacherId = teacherId;
+    }
     public int getCourseId() {
         return courseId;
     }

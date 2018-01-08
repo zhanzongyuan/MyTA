@@ -80,16 +80,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     }
 
-    private void initialData() {
-        data = getSharedPreferences("data", MODE_PRIVATE);
-        viewPager = (ViewPager) findViewById(R.id.frame_layout);
-        bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
-        Intent intent = getIntent();
-        user = (User) intent.getSerializableExtra("user");
-        if (user == null) user = new User();
-        // TODO: Put data to three different fragments.
-        fragmentCourse = CourseFragment.newInstance(user.getApiKey(), user.getID(), user.getType(), user.getName());
-        assignmentListFragment = AssignmentListFragment.newInstance(this);
+    public void getAllAsign() {
         (new APIClient()).subscribeGetAssign(new Observer<Response<List<Assignment>>>() {
             @Override
             public void onSubscribe(Disposable d) {}
@@ -97,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             public void onNext(Response<List<Assignment>> assignResponse) {
                 if (assignResponse.code() == 200) {
                     Log.d("success", "获取所有assign成功");
+
                     assignmentListFragment.addAllAssignment(assignResponse.body(), user.getType());
                     assignmentListFragment.setApiKey(user.getApiKey());
                 } else if (assignResponse.code() == 400) {
@@ -113,6 +105,19 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             @Override
             public void onComplete() {}
         }, user.getApiKey(), user.getID());
+    }
+
+    private void initialData() {
+        data = getSharedPreferences("data", MODE_PRIVATE);
+        viewPager = (ViewPager) findViewById(R.id.frame_layout);
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
+        Intent intent = getIntent();
+        user = (User) intent.getSerializableExtra("user");
+        if (user == null) user = new User();
+        // TODO: Put data to three different fragments.
+        fragmentCourse = CourseFragment.newInstance(user.getApiKey(), user.getID(), user.getType(), user.getName());
+        assignmentListFragment = AssignmentListFragment.newInstance(this);
+        getAllAsign();
         assignmentFragment = AssignmentFragment.newInstance();
         fragmentUser = UserFragment.newInstance();
         fragmentUser.setUserData(user);
@@ -165,7 +170,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 case R.id.icon_user_info:
                     viewPager.setCurrentItem(2);
                     break;
-
             }
             return true;
         }
@@ -180,11 +184,11 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 break;
             case 1:
                 getSupportActionBar().setTitle(R.string.homework);
+                getAllAsign();
                 break;
             case 2:
                 getSupportActionBar().setTitle(R.string.user_info);
                 break;
-
         }
     }
 
