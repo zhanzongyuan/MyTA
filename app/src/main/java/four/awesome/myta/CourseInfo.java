@@ -51,6 +51,8 @@ public class CourseInfo extends AppCompatActivity {
     Button attendance_button;
     ImageView releaseAssisgnmentButton;
     private User teacher;
+    private List<Assignment> assignments;
+    private MyCourseListAdapter myAsgmListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,7 @@ public class CourseInfo extends AppCompatActivity {
         initialReleaseAssisgment();
         initialAppendCourse();
         initialAttendanceButton();
+        initialClassmate();
     }
 
     // Import data from parent activiy
@@ -243,6 +246,8 @@ public class CourseInfo extends AppCompatActivity {
                     isJoined = true;
                     Toast.makeText(getApplicationContext(), "创建成功", Toast.LENGTH_SHORT).show();
                     assignmentResponse.body().setCreator(teacher);
+                    assignments.add(assignmentResponse.body());
+                    myAsgmListAdapter.notifyDataSetChanged();
                     EventBus.getDefault().post(assignmentResponse.body());
                 }
                 else if (assignmentResponse.code() == 400) {
@@ -334,10 +339,10 @@ public class CourseInfo extends AppCompatActivity {
     // Initial assisgment list view.
     public void initialAsgmView() {
         // Request data.
-        final List<Assignment> assignments = new ArrayList<>();
-        final MyCourseListAdapter myAsgmListAdapter = new MyCourseListAdapter(this,
+        assignments = new ArrayList<>();
+        myAsgmListAdapter = new MyCourseListAdapter(this,
                 R.layout.normal_list_item, assignments);
-        (new APIClient()).subscribeGetAssign(new Observer<Response<List<Assignment>>>() {
+        (new APIClient()).subscribeGetAllAssign(new Observer<Response<List<Assignment>>>() {
             @Override
             public void onSubscribe(Disposable d) {}
             @Override
@@ -359,7 +364,7 @@ public class CourseInfo extends AppCompatActivity {
 
             @Override
             public void onComplete() {}
-        }, apiKey, id);
+        }, apiKey);
         // Initial view.
         RecyclerView rv = (RecyclerView) findViewById(R.id.recyclerview_course_asgm);
         myAsgmListAdapter.setOnBindDataListener(new MyCourseListAdapter.OnBindDataListener<Assignment>() {
@@ -368,9 +373,64 @@ public class CourseInfo extends AppCompatActivity {
                 ((TextView) holder.getView(R.id.name)).setText(d.getName());
             }
         });
+        myAsgmListAdapter.setOnItemClickListener(new MyCourseListAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(int position) {
+                Intent intent = new Intent(CourseInfo.this, AssignActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("type", type);
+                bundle.putSerializable("assignment", assignments.get(position));
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onLongClick(int position) {}
+        });
         rv.setAdapter(myAsgmListAdapter);
         rv.setLayoutManager(new LinearLayoutManager(this));
 
+    }
+
+    // Initial classmate view.
+    public void initialClassmate() {
+        final List<User> usersList = new ArrayList<>();
+        final MyCourseListAdapter myUsersListAdapter = new MyCourseListAdapter(this,
+                R.layout.normal_list_item, usersList);
+        (new APIClient()).subscribeGetUsers(new Observer<Response<List<User>>>() {
+            @Override
+            public void onSubscribe(Disposable d) {}
+
+            @Override
+            public void onNext(Response<List<User>> listResponse) {
+                if (listResponse.code() == 200) {
+                    for (int i = 0; i < listResponse.body().size(); i++) {
+                        usersList.add(listResponse.body().get(i));
+                    }
+                    myUsersListAdapter.notifyDataSetChanged();
+                } else if (listResponse.code() == 400) {
+                    Toast.makeText(getApplicationContext(), "无法访问", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "未知错误", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {e.printStackTrace();}
+
+            @Override
+            public void onComplete() {}
+        }, apiKey, course.getId(), "student");
+
+        RecyclerView rv = (RecyclerView) findViewById(R.id.recyclerview_classmate);
+        myUsersListAdapter.setOnBindDataListener(new MyCourseListAdapter.OnBindDataListener<User>() {
+            @Override
+            public void onBindData(MyCourseListAdapter.ViewHolder holder, User d) {
+                ((TextView) holder.getView(R.id.name)).setText(d.getName());
+            }
+        });
+        rv.setAdapter(myUsersListAdapter);
+        rv.setLayoutManager(new LinearLayoutManager(this));
     }
 
     @Override
