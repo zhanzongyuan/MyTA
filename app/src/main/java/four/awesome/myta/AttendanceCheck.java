@@ -110,10 +110,11 @@ public class AttendanceCheck extends AppCompatActivity implements Observer<Respo
 
         Map<String, Object> temp = new LinkedHashMap<>();
         temp.put("name", "姓名");
+        temp.put("stu_id", "学号");
         temp.put("state", "状态");
         data.add(temp);
 
-        simpleAdapter = new SimpleAdapter(this, data, R.layout.attendance_result, new String[] {"name", "state"}, new int[] {R.id.att_result_name, R.id.state});
+        simpleAdapter = new SimpleAdapter(this, data, R.layout.attendance_result, new String[] {"name", "stu_id", "state"}, new int[] {R.id.att_result_name, R.id.stu_id, R.id.state});
 
         //adapter = new ArrayAdapter<String>(this, R.layout.attendance_result, R.id.att_result_name, att_result_name);
         att_result.setAdapter(simpleAdapter);
@@ -204,6 +205,7 @@ public class AttendanceCheck extends AppCompatActivity implements Observer<Respo
                 if (att_result_id.get(j) == stu_list.get(i).getID()) {
                     att_result_name.add(stu_list.get(i).getName());
                     temp.put("name", stu_list.get(i).getName());
+                    temp.put("stu_id", stu_list.get(i).getCampusID());
                     temp.put("state", "已签到");
                     flag = false;
                     break;
@@ -211,6 +213,7 @@ public class AttendanceCheck extends AppCompatActivity implements Observer<Respo
             }
             if (flag) {
                 temp.put("name", stu_list.get(i).getName());
+                temp.put("stu_id", stu_list.get(i).getCampusID());
                 temp.put("state", "未签到");
             }
             data.add(temp);
