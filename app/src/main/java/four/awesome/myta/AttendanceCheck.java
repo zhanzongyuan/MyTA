@@ -31,8 +31,8 @@ import retrofit2.Response;
 public class AttendanceCheck extends AppCompatActivity implements Observer<Response<Attendance>> {
     private Button start_stop_att;
     private ListView att_result;
-    private ArrayList<String> att_result_name = new ArrayList<String>();
-    private ArrayAdapter<String> adapter;
+    private ArrayList<Integer> att_result_name = new ArrayList<Integer>();
+    private ArrayAdapter<Integer> adapter;
     private EditText att_input;
     private TextView att_or_time;
     private TextView rand_code;
@@ -79,7 +79,7 @@ public class AttendanceCheck extends AppCompatActivity implements Observer<Respo
         att_result = (ListView) findViewById(R.id.show_att_result);
         final LinearLayout stu_att = (LinearLayout) findViewById(R.id.stu_att);
 
-        adapter = new ArrayAdapter<String>(this, R.layout.attendance_result, R.id.att_result_name, att_result_name);
+        adapter = new ArrayAdapter<Integer>(this, R.layout.attendance_result, R.id.att_result_name, att_result_name);
         att_result.setAdapter(adapter);
 
         if (user_type.equals("student")) {
@@ -125,13 +125,12 @@ public class AttendanceCheck extends AppCompatActivity implements Observer<Respo
                 super.handleMessage(msg);
                 switch (msg.what) {
                     case 123:
-                        // TODO: 18-1-7 请后端修改获取签到对象的接口 
-                        //(new APIClient()).subscribeGetAttendanceCode(observer, course_id, attendance.getId(), apiKey);
+                        (new APIClient()).subscribeGetAttendanceCode(observer, course_id, attendance.getId(), apiKey);
                         start_stop_att.setClickable(true);
                         start_stop_att.setTextColor(getResources().getColor(R.color.black));
                         break;
                     case 111:
-                        att_result_name.add("张家侨");
+                        //att_result_name.add("张家侨");
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -175,6 +174,11 @@ public class AttendanceCheck extends AppCompatActivity implements Observer<Respo
                 Toast.makeText(context, "签到成功", Toast.LENGTH_LONG).show();
             }
         } else if (res.code() == 200) {
+            attendance = res.body();
+            if (attendance == null) {
+                return;
+            }
+            att_result_name = attendance.getStudentList();
             adapter.notifyDataSetChanged();
         } else {
             if (user_type.equals("teacher")) {
