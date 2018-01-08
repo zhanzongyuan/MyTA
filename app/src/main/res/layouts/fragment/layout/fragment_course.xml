@@ -8,13 +8,43 @@
 
     <!-- TODO: Update course fragment layout -->
 
+    <TextView
+        android:id="@+id/course_title_chosen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="已选课程"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:padding="10dp"
+        android:background="?android:attr/windowBackground"
+        android:textColor="?attr/colorPrimaryDark"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/reclyerView_course"/>
+
+    <TextView
+        android:id="@+id/course_title_all"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="全部课程"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:padding="10dp"
+        android:background="?android:attr/windowBackground"
+        android:textColor="?attr/colorPrimaryDark"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/reclyerView_all_course"
+        android:visibility="invisible"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/reclyerView_all_course"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/course_title_all"
         app:layout_constraintEnd_toEndOf="parent"
         android:visibility="invisible"/>
 
@@ -23,7 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/course_title_chosen"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <android.support.design.widget.FloatingActionButton
