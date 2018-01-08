@@ -24,14 +24,12 @@ public class AssignActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         Bundle bundle = this.getIntent().getExtras();
         String type = bundle.getString("type");
         // Change theme when different user.
         if (type.equals("teacher")) {
             setTheme(R.style.AppThemeTA);
         }
-
         setContentView(R.layout.activity_assign);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -46,7 +44,10 @@ public class AssignActivity extends AppCompatActivity {
         endTime = (TextView) findViewById(R.id.end_time);
         assignDetail = (TextView) findViewById(R.id.assign_detail);
         // 用户设置头像还没写
+        if (assignment.getCreator() != null)
         creatorName.setText(assignment.getCreator().getName());
+        else
+        creatorName.setText("");
         assignName.setText(assignment.getName());
         startTime.setText(formatter.format(assignment.getStartTime()));
         endTime.setText(formatter.format(assignment.getEndTime()));

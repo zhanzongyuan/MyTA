@@ -87,6 +87,7 @@ public class AssignmentListFragment extends Fragment {
     }
     // 添加所有assignment
     public void addAllAssignment(final List<Assignment> list, String userType) {
+        recyclerAdapter.removeAll();
         for (int i = 0; i < list.size(); i++) {
             final int pos = i;
             recyclerAdapter.addData(new SecondaryListAdapter.DataTree<Date, Assignment>(list.get(pos).getEndTime(), new ArrayList<Assignment>(){{add(list.get(pos));}}));
