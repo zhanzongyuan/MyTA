@@ -83,9 +83,16 @@ public class APIClient {
         @GET("courses")
         Observable<Response<List<Course>>> listCoursesByUserID(@Query("api_key") String apiKey,
                                                                @Query("user_id") int userID);
+
+
         @GET("assignments")
         Observable<Response<List<Assignment>>> getAssignments(@Query("api_key") String apiKey,
                                                         @Query("user_id") int userId);
+
+
+        @GET("assignments")
+        Observable<Response<List<Assignment>>> getAllAssignments(@Query("api_key") String apiKey);
+
 
         @GET("users")
         Observable<Response<List<User>>> getUsers(@Query("api_key") String apiKey,
@@ -165,6 +172,15 @@ public class APIClient {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
     }
+
+
+    public void subscribeGetAllAssign(Observer<Response<List<Assignment>>> observer, String apiKey) {
+        service.getAllAssignments(apiKey)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+    }
+
 
     public void subscribeCreateAssign(Observer<Response<Assignment>> observer, String apiKey,
                                       String asgName, String pTime, String eTime,
