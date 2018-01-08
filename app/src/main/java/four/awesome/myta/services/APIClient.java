@@ -101,8 +101,8 @@ public class APIClient {
                                                           @Field("detail") String detail,
                                                           @Field("course_id") int courseId,
                                                           @Field("course_name") String courseName);
-        @DELETE("assignment")
-        Observable<Response<Void>> deleteAssignment(@Query("ID") int assignId, @Query("api_key") String apiKey);
+        @DELETE("assignments/{ID}")
+        Observable<Response<Void>> deleteAssignment(@Path("ID") int assignId, @Query("api_key") String apiKey);
 
         @FormUrlEncoded
         @POST("rollcalls")
