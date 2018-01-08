@@ -186,6 +186,8 @@ public class AttendanceCheck extends AppCompatActivity implements Observer<Respo
             } else {
                 Toast.makeText(context, "签到失败", Toast.LENGTH_LONG).show();
             }
+            start_stop_att.setClickable(true);
+            start_stop_att.setTextColor(getResources().getColor(R.color.black));
         }
     }
     @Override
