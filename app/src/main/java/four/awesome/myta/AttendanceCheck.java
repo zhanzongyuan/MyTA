@@ -132,7 +132,6 @@ public class AttendanceCheck extends AppCompatActivity implements Observer<Respo
                         start_stop_att.setTextColor(getResources().getColor(R.color.black));
                         break;
                     case 111:
-                        //att_result_name.add(1);
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -174,8 +173,6 @@ public class AttendanceCheck extends AppCompatActivity implements Observer<Respo
                 rand_code.setText(attendance.getCode());
             } else {
                 Toast.makeText(context, "签到成功", Toast.LENGTH_LONG).show();
-                start_stop_att.setClickable(true);
-                start_stop_att.setTextColor(getResources().getColor(R.color.black));
             }
         } else if (res.code() == 200) {
             attendance = res.body();
