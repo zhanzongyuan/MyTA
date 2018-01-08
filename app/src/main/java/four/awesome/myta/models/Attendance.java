@@ -21,7 +21,7 @@ public class Attendance implements Serializable {
     int last;
     @SerializedName("code")
     String code;
-    ArrayList<Integer> student;
+    ArrayList<Integer> students;
 
     public Attendance(int id, int courseId, String s_time, int last_time, String att_code) {
         attendance_id = id;
@@ -32,8 +32,8 @@ public class Attendance implements Serializable {
     }
 
     public void setStudent(ArrayList<Integer> stu_list) {
-        this.student = new ArrayList<Integer>();
-        this.student = stu_list;
+        this.students = new ArrayList<Integer>();
+        this.students = stu_list;
     }
 
     public String getCode() {
@@ -45,6 +45,6 @@ public class Attendance implements Serializable {
     }
 
     public ArrayList<Integer> getStudentList() {
-        return student;
+        return students;
     }
 }
