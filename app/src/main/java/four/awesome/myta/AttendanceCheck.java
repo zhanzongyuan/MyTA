@@ -20,6 +20,7 @@ import android.widget.Toast;
 import org.xml.sax.helpers.AttributesImpl;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import four.awesome.myta.models.Attendance;
@@ -32,8 +33,10 @@ import retrofit2.Response;
 public class AttendanceCheck extends AppCompatActivity implements Observer<Response<Attendance>> {
     private Button start_stop_att;
     private ListView att_result;
-    private ArrayList<Integer> att_result_name = new ArrayList<Integer>();
-    private ArrayAdapter<Integer> adapter;
+    private ArrayList<Integer> att_result_id = new ArrayList<Integer>();
+    private ArrayList<String> att_result_name = new ArrayList<String>();
+    private List<User> stu_list = new LinkedList<User>();
+    private ArrayAdapter<String> adapter;
     private EditText att_input;
     private TextView att_or_time;
     private TextView rand_code;
@@ -54,10 +57,11 @@ public class AttendanceCheck extends AppCompatActivity implements Observer<Respo
         setContentView(R.layout.activity_attendance_check);
         (getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         initialView();
+        initialHandler();
     }
 
     private void initialData() {
-        initialHandler();
+        System.out.println("initial data ok1");
         context = this;
         observer = this;
         Intent intent = getIntent();
@@ -65,8 +69,25 @@ public class AttendanceCheck extends AppCompatActivity implements Observer<Respo
         user_type = intent.getStringExtra("type");
         user_id = intent.getIntExtra("userId", -1);
         course_id = intent.getIntExtra("courseId", -1);
+        System.out.println("initial data ok2");
+        (new APIClient()).subscribeGetUsers(new Observer<Response<List<User>>>() {
+            @Override
+            public void onSubscribe(Disposable d) {}
+            @Override
+            public void onNext(Response<List<User>> res) {
+                if (res.code() == 200) {
+                    stu_list.addAll(res.body());
+                    System.out.println("stu_list = " + stu_list.size());
+                }
+            }
 
-        // Change theme when different user.
+            @Override
+            public void onError(Throwable e) {e.printStackTrace();}
+
+            @Override
+            public void onComplete() {}
+        }, apiKey, course_id, "student");
+
         if (user_type.equals("teacher")) {
             setTheme(R.style.AppThemeTA);
         }
@@ -81,7 +102,7 @@ public class AttendanceCheck extends AppCompatActivity implements Observer<Respo
         att_result = (ListView) findViewById(R.id.show_att_result);
         final LinearLayout stu_att = (LinearLayout) findViewById(R.id.stu_att);
 
-        adapter = new ArrayAdapter<Integer>(this, R.layout.attendance_result, R.id.att_result_name, att_result_name);
+        adapter = new ArrayAdapter<String>(this, R.layout.attendance_result, R.id.att_result_name, att_result_name);
         att_result.setAdapter(adapter);
 
         if (user_type.equals("student")) {
@@ -112,6 +133,8 @@ public class AttendanceCheck extends AppCompatActivity implements Observer<Respo
                     } else {
                         start_stop_att.setClickable(false);
                         start_stop_att.setTextColor(getResources().getColor(R.color.gray));
+                        att_input.setFocusable(false);
+                        att_input.setEnabled(false);
                         (new APIClient()).subscribeCreateAttendanceCheck(observer, course_id,  Integer.parseInt(last), apiKey);
                         createThread(Integer.parseInt(last));
                     }
@@ -130,8 +153,14 @@ public class AttendanceCheck extends AppCompatActivity implements Observer<Respo
                         (new APIClient()).subscribeGetAttendanceCode(observer, course_id, attendance.getId(), apiKey);
                         start_stop_att.setClickable(true);
                         start_stop_att.setTextColor(getResources().getColor(R.color.black));
+                        att_input.setFocusable(true);
+                        att_input.setEnabled(true);
                         break;
                     case 111:
+                        String time = att_input.getText().toString();
+                        int time_i = Integer.parseInt(time);
+                        time_i = time_i - 1;
+                        att_input.setText("" + time_i);
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -158,6 +187,17 @@ public class AttendanceCheck extends AppCompatActivity implements Observer<Respo
         thread.start();
     }
 
+    private void addStudentNameToAdapter() {
+        for (int i = 0; i < att_result_id.size(); i++) {
+            for (int j = 0; j < stu_list.size(); j++) {
+                if (att_result_id.get(i) == stu_list.get(j).getID()) {
+                    att_result_name.add(stu_list.get(j).getName());
+                    break;
+                }
+            }
+        }
+    }
+
     @Override
     public void onSubscribe(Disposable d) {}
 
@@ -179,8 +219,9 @@ public class AttendanceCheck extends AppCompatActivity implements Observer<Respo
             if (attendance == null) {
                 return;
             }
-            att_result_name.addAll(attendance.getStudentList());
-            System.out.println("size = " + att_result_name.size());
+            att_result_id.addAll(attendance.getStudentList());
+            addStudentNameToAdapter();
+            System.out.println("id size = " + att_result_id.size());
             adapter.notifyDataSetChanged();
         } else {
             if (user_type.equals("teacher")) {
@@ -189,6 +230,8 @@ public class AttendanceCheck extends AppCompatActivity implements Observer<Respo
                 Toast.makeText(context, "签到失败", Toast.LENGTH_LONG).show();
             }
             start_stop_att.setClickable(true);
+            att_input.setFocusable(true);
+            att_input.setEnabled(true);
             start_stop_att.setTextColor(getResources().getColor(R.color.black));
         }
     }
