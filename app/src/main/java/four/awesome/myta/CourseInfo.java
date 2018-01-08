@@ -376,12 +376,12 @@ public class CourseInfo extends AppCompatActivity {
         myAsgmListAdapter.setOnItemClickListener(new MyCourseListAdapter.OnItemClickListener() {
             @Override
             public void onClick(int position) {
-                Intent intent = new Intent(CourseInfo.this, AssignActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("type", type);
-                bundle.putSerializable("assignment", assignments.get(position));
-                intent.putExtras(bundle);
-                startActivity(intent);
+//                Intent intent = new Intent(CourseInfo.this, AssignActivity.class);
+//                Bundle bundle = new Bundle();
+//                bundle.putString("type", type);
+//                bundle.putSerializable("assignment", assignments.get(position));
+//                intent.putExtras(bundle);
+//                startActivity(intent);
             }
 
             @Override
