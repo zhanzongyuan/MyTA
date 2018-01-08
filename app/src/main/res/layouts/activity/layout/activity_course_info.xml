@@ -50,9 +50,12 @@
             <Button
                 android:id="@+id/attendance_button"
                 android:layout_width="60dp"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
                 android:text="考勤"
-                android:textSize="18sp"/>
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:background="@android:color/holo_red_light"/>
         </LinearLayout>
 
     </LinearLayout>

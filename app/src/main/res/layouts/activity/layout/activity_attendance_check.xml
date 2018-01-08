@@ -38,7 +38,9 @@
         android:id="@+id/start_stop_attendance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="开始签到"/>
+        android:text="开始签到"
+        android:background="@drawable/button"
+        android:textColor="@color/white"/>
 
     <TextView
         android:layout_marginTop="20dp"

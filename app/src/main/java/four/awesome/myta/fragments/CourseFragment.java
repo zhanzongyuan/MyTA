@@ -132,7 +132,9 @@ public class CourseFragment extends Fragment {
             loadAllCourse();
 
             courseListView.setVisibility(View.INVISIBLE);
+            view.findViewById(R.id.course_title_all).setVisibility(View.INVISIBLE);
             allCourseListView.setVisibility(View.VISIBLE);
+            view.findViewById(R.id.course_title_all).setVisibility(View.VISIBLE);
             ((FloatingActionButton) view.findViewById(R.id.floatingButton_add))
                     .setImageResource(R.drawable.ic_arrow_back_black_24dp);
 
@@ -140,7 +142,9 @@ public class CourseFragment extends Fragment {
         }
         else {
             courseListView.setVisibility(View.VISIBLE);
+            view.findViewById(R.id.course_title_all).setVisibility(View.VISIBLE);
             allCourseListView.setVisibility(View.INVISIBLE);
+            view.findViewById(R.id.course_title_all).setVisibility(View.INVISIBLE);
             ((FloatingActionButton) view.findViewById(R.id.floatingButton_add))
                     .setImageResource(R.drawable.ic_add_black_24dp);
 
