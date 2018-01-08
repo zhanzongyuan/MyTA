@@ -195,7 +195,8 @@ public abstract class SecondaryListAdapter<GVH, SVH extends RecyclerView.ViewHol
                                                 dataTrees.remove(itemStatus.getGroupItemIndex());
                                             }
                                             Toast.makeText(context, "删除成功", Toast.LENGTH_SHORT).show();
-                                        } else if (response.code() == 400) {
+                                            notifyDataSetChanged();
+                                        } else if (response.code() == 404) {
                                             Log.d("error", "获取assign网络失败");
                                         } else {
                                             Log.d("error", "获取assign其他原因失败1");

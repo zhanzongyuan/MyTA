@@ -95,7 +95,6 @@ public class CourseInfo extends AppCompatActivity {
         if (type.equals("student")) {
             releaseAssisgnmentButton.setVisibility(View.INVISIBLE);
         }
-
         initialAsgmView();
     }
 
@@ -341,7 +340,6 @@ public class CourseInfo extends AppCompatActivity {
         (new APIClient()).subscribeGetAssign(new Observer<Response<List<Assignment>>>() {
             @Override
             public void onSubscribe(Disposable d) {}
-
             @Override
             public void onNext(Response<List<Assignment>> listResponse) {
                 if (listResponse.code() == 200) {

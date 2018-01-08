@@ -35,8 +35,6 @@ public class AssignActivity extends AppCompatActivity {
         setContentView(R.layout.activity_assign);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-
-
         this.assignment = (Assignment) bundle.getSerializable("assignment");
         setView();
     }

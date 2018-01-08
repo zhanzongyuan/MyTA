@@ -26,21 +26,8 @@ public class Assignment implements Serializable {
     private int courseId;
 
     private User creator;
+    @SerializedName("id")
     private int assignId;
-
-
-    public Assignment() {
-        name = "";
-        endTime = new Date();
-        startTime = new Date();
-        detail = "";
-        creator = new User();
-        creator.setName("张涵玮");
-        creator.setEmail("123@qq.com");
-        creator.setType("teacher");
-        creator.setCampusID("12345");
-        assignId = 0;
-    }
     public Assignment(String name, Date startTime, Date endTime, String detail, User creator, int assignId) {
         this.name = name;
         this.endTime = endTime;
