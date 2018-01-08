@@ -11,7 +11,7 @@ import java.util.List;
  */
 
 public class Attendance implements Serializable {
-    @SerializedName("attendance_id")
+    @SerializedName("id")
     int attendance_id;
     @SerializedName("course_id")
     int course_id;
@@ -21,7 +21,7 @@ public class Attendance implements Serializable {
     int last;
     @SerializedName("code")
     String code;
-    List<Integer> student;
+    ArrayList<Integer> student;
 
     public Attendance(int id, int courseId, String s_time, int last_time, String att_code) {
         attendance_id = id;
@@ -31,7 +31,7 @@ public class Attendance implements Serializable {
         code = att_code;
     }
 
-    public void setStudent(List<Integer> stu_list) {
+    public void setStudent(ArrayList<Integer> stu_list) {
         this.student = new ArrayList<Integer>();
         this.student = stu_list;
     }
@@ -42,5 +42,9 @@ public class Attendance implements Serializable {
 
     public int getId() {
         return attendance_id;
+    }
+
+    public ArrayList<Integer> getStudentList() {
+        return student;
     }
 }

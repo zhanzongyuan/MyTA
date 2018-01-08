@@ -110,13 +110,13 @@ public class APIClient {
                                                           @Field("course_id") int courseId,
                                                           @Field("last") int last);
 
-        @GET
-        Observable<Response<Attendance>> getAttendanceCode(@Query("api_key") String apiKey,
-                                                           @Query("course_id") int courseId,
-                                                           @Query("attendance_id") int attendanceId);
+        @GET("rollcalls/{ID}")
+        Observable<Response<Attendance>> getAttendanceCode(@Path("ID") int attId,
+                                                           @Query("api_key") String apiKey,
+                                                           @Query("course_id") int courseId);
 
         @FormUrlEncoded
-        @PATCH
+        @PATCH("rollcalls")
         Observable<Response<Attendance>> callAttendance(@Query("api_key") String apiKey,
                                                         @Field("user_id") int userId,
                                                         @Field("code") String code);
@@ -239,7 +239,7 @@ public class APIClient {
 
     public void subscribeGetAttendanceCode(Observer<Response<Attendance>> observer, int courseId,
                                            int attendanceId, String apiKey) {
-        service.getAttendanceCode(apiKey, courseId, attendanceId)
+        service.getAttendanceCode(attendanceId, apiKey, courseId)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
@@ -251,6 +251,5 @@ public class APIClient {
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
-        // TODO: 18-1-8 有bug，"java.lang.IllegalArgumentException: Missing either @PATCH URL or @Url parameter."
     }
 }
